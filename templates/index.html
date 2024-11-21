@@ -1,0 +1,595 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouthPlatform | Home</title>
+    <link rel="stylesheet" href="{% static 'owlcarousel/owl.theme.default.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'owlcarousel/owl.carousel.min.css' %} ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css">
+    <link rel="stylesheet" href="{% static 'sass/main.css' %} ">
+    <link rel="stylesheet" href="{% static 'sass/vender/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'sass/vender/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=play_arrow" />
+
+    <style>
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="/"><img src="{% static 'media/images/defaults/logoblack.png' %} " alt="Logo" /></a>
+            </div>
+            <center>
+                <div class="search">
+                    <input type="text" id="search" placeholder="Search...">
+                    <div class="results" style="display: none;"></div>
+                </div>
+            </center>
+            <div class="header-icons">
+                <i class="fa fa-search" id="mobile-search-icon"></i>
+                <a href="chat"><i class="fa fa-comments" id="dms-icon"></i></a>
+                <a href="coubs"><i class="fa-solid fa-play"></i></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#create_modal"><i class="fa-solid fa-plus"></i></a>
+                <div class="profile-dropdown">
+                    <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-icon">
+                    <div class="profile-dropdown-menu">
+                        <a href="profile/{{user_profile.username}}/">Profile</a>
+                        <a href="logout">Logout</a>
+                        <div class="theme-dots">
+                            <div class="dot white" data-theme="default-theme"></div>
+                            <div class="dot purple" data-theme="purple-theme"></div>
+                            <div class="dot dark" data-theme="dark-theme"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="account">
+                <img src="{% static 'media/images/defaults/Default_pfp.svg.png' %}" alt="Profile Picture"
+                    class="account-dp">
+                <div class="account-info">
+                    <span class="account-name">{{ user_profile.name }}</span>
+                    <span class="account-username">{{ user_profile.role }}</span>
+                </div>
+                <!-- <div class="switch-account">
+                    <a href="#">Switch</a>
+                </div> -->
+            </div>
+            <ul>
+                <li class="active"><a href="/"><i class="fa fa-home"></i> Feed</a></li>
+                <!-- <li><a href="explore"><i class="fa fa-compass"></i> Explore</a></li> -->
+                <li><a href="coubs"><i class="fa-solid fa-play"></i> Coubs</a></li>
+                <li><a href="chat"><i class="fa fa-comments" id="dms-icon"></i> Chat</a></li>
+                <!-- <li><a href="#"><i class="fa fa-bookmark"></i> Saved</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-chart-line"></i> Insights</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-archive"></i> Archive</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-qrcode"></i> QR Code</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li> -->
+                <li class="logout"><a href="logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="content" id="posts-container">
+            <!-- <div class="post">
+                <div class="post-header">
+                    <img src="{% static 'media/images/defaults/Default_pfp.svg.png' %}" alt="Profile Picture">
+                    <div class="post-user-info">
+                        <span class="post-username">John Doe</span>
+                        <span class="post-location">New York, USA</span>
+                    </div>
+                </div>
+
+                <div class="post-slides">
+                    <div class="slide active">
+                        <img src="{% static 'media/images/defaults/portrait.jpg' %}" alt="Post Image 1">
+                    </div>
+                    <div class="slide">
+                        <img src="{% static 'media/images/defaults/supercar.jpg' %}" alt="Post Image 2">
+                    </div>
+                    <div class="slide">
+                        <img src="{% static 'media/images/defaults/maserati.jpg' %}" alt="Post Image 3">
+                    </div>
+                    <div class="slide-nav prev"><i class="fas fa-chevron-left"></i></div>
+                    <div class="slide-nav next"><i class="fas fa-chevron-right"></i></div>
+                    <div class="slide-indicators">
+                        <div class="indicator active"></div>
+                        <div class="indicator"></div>
+                        <div class="indicator"></div>
+                    </div>
+                </div>
+
+                <div class="post-footer">
+                    <div class="actions">
+                        <div class="icons">
+                            <div class="icon_left d-flex">
+                                <div class="like">
+                                    <img class="not_loved" src="{% static 'media/images/defaults/love.png' %}">
+                                    <img class="loved" src="{% static 'media/images/defaults/heart.png' %}">
+                                </div>
+                                <div class="chat">
+                                    <button type="button" class="btn p-0" data-bs-toggle="modal"
+                                        data-bs-target="#message_modal">
+                                        <img src="{% static 'media/images/defaults/bubble-chat.png' %}">
+                                    </button>
+                                </div>
+                                <div class="send">
+                                    <button type="button" class="btn p-0" data-bs-toggle="modal"
+                                        data-bs-target="#send_message_modal">
+                                        <img src="{% static 'media/images/defaults/send.png' %}">
+                                    </button>
+                                </div>
+                                <div class="save not_saved">
+                                    <img class="hide saved" src="{% static 'media/images/defaults/save_black.png' %}">
+                                    <img class="not_saved"
+                                        src="{% static 'media/images/defaults/save-instagram.png' %}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p><b>Liked by</b> <span class="likes">200 others</span></p>
+                    <p><b>Jane:</b> Awesome car!</p>
+                    <span class="post-date">2 days ago</span>
+                </div>
+                <div class="add-comment">
+                    <img src="{{ user_profile.profile_pic.url }}" alt="Profile Picture">
+                    <input type="text" id="comment-input-{{ post.id }}" placeholder="Add a comment...">
+                    <button class="add-comment-btn" data-post-id="{{ post.id }}">Post</button>
+                </div>
+                </div>
+
+            </div>
+            <div class="post vvv">
+                <div class="post-header">
+                    <img src="{% static 'media/images/defaults/Default_pfp.svg.png' %}" alt="Profile Picture">
+                    <div class="post-user-info">
+                        <span class="post-username">John Doe</span>
+                        <span class="post-location">New York, USA</span>
+                    </div>
+                </div>
+                <div class="video-post">
+                    <div class="video">
+                        <video class="video__player" src="{% static 'media/videos/defaults/video1.mp4' %}"></video>
+                    </div>
+                </div>
+
+                <div class="post-footer">
+                    <div class="actions">
+                        <i class="fa fa-heart like-icon"></i>
+                        <i class="fa fa-comment"></i>
+                        <i class="fa fa-share"></i>
+                        <i class="fa fa-bookmark save-icon"></i>
+                    </div>
+                    <p><b>Liked by</b> <span class="likes">200 others</span></p>
+                    <p><b>Jane:</b> Awesome car!</p>
+                    <span class="post-date">2 days ago</span>
+                </div>
+
+                <div class="add-comment">
+                    <img src="{{ user_profile.profile_pic.url }}" alt="Profile Picture">
+                    <input type="text" id="comment-input-{{ post.id }}" placeholder="Add a comment...">
+                    <button class="add-comment-btn" data-post-id="{{ post.id }}">Post</button>
+                </div>
+            </div> -->
+
+
+        </div>
+
+        <!-- Suggestions -->
+        <aside class="suggestions">
+            <h3>Mentors For You</h3>
+
+            {% if latest_mentors %}
+            {% for mentor in latest_mentors %}
+            <div class="suggestion">
+                <!-- Mentor Profile Picture -->
+                <img src="{{ mentor.profile_pic.url|default:'static/media/images/defaults/Default_pfp.svg.png' }}"
+                    alt="Profile">
+
+                <!-- Mentor Info -->
+                <div class="suggestion-info">
+                    <span>@{{ mentor.username }}</span>
+                    <span><a href="{% url 'profile' mentor.username %}">Visit</a></span>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p>No mentors in you area yet</p>
+            {% endif %}
+        </aside>
+    </div>
+
+    <div class="modal fade" id="create_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form id="upload-form" action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data"
+                    class="needs-validation" novalidate> <!-- Added needs-validation and novalidate -->
+                    {% csrf_token %}
+                    <div class="mb-3"> <!-- Media Upload -->
+                        <label for="media-upload" class="form-label">Upload Media:</label>
+                        <input type="file" class="form-control" id="media-upload" name="media" accept="image/*,video/*"
+                            multiple required>
+                        <div class="invalid-feedback">Please select at least one media file.</div>
+                        <!-- Validation feedback -->
+                    </div>
+
+                    <div class="mb-3"> <!-- Description -->
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description" rows="4"
+                            placeholder="Add a description..." required></textarea>
+                        <div class="invalid-feedback">Please enter a description.</div> <!-- Validation feedback -->
+                    </div>
+
+                    <input type="hidden" id="is_video" name="is_video" value="false">
+
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+
+                <script>
+                    // Example starter JavaScript for disabling form submissions if there are invalid fields
+                    (() => {
+                        'use strict'
+
+                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                        const forms = document.querySelectorAll('.needs-validation')
+
+                        // Loop over them and prevent submission
+                        Array.from(forms).forEach(form => {
+                            form.addEventListener('submit', event => {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                }
+
+                                form.classList.add('was-validated') // Add was-validated class for styling
+                            }, false)
+                        })
+                    })()
+
+                    // ... (your existing JavaScript for handling the is_video input)
+
+                    const uploadForm = document.getElementById('upload-form');
+                    const mediaUpload = document.getElementById('media-upload');
+                    const isVideoInput = document.getElementById('is_video');
+
+                    mediaUpload.addEventListener('change', function () {
+                        const files = this.files;
+                        isVideoInput.value = "false"; // Default to false
+
+                        if (files.length === 1 && files[0].type.startsWith('video/')) {
+                            isVideoInput.value = "true"; // Single video file
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- search results -->
+    <script>
+        const searchInput = document.getElementById('search');
+        const resultsContainer = document.querySelector('.results');
+
+        searchInput.addEventListener('input', (event) => {
+            const query = event.target.value.trim();
+
+            if (query.length > 0) {
+                // Make your AJAX request here to fetch search results
+                // Replace this with your actual API call
+                fetch(`/search/users/?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display search results in the results container
+                        resultsContainer.innerHTML = ''; // Clear previous results
+
+                        if (data.users.length > 0) {
+                            data.users.forEach(user => {
+                                const userLink = document.createElement('a');
+                                userLink.href = `/profile/${user.username}/`;
+                                userLink.innerHTML = `
+                      <div class="cart">
+                        <div class="img">
+                          <img src="${user.profile_pic || '/path/to/default/image.png'}" alt="${user.username}'s profile picture">
+                        </div>
+                        <div class="info">
+                          <p class="name">${user.name}</p>
+                          <p class="name">@${user.username}</p>
+                        </div>
+                      </div>
+                    `;
+                                resultsContainer.appendChild(userLink);
+                            });
+                            resultsContainer.style.display = 'block';
+                        } else {
+                            resultsContainer.innerHTML = '<p>No results found.</p>';
+                            resultsContainer.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching search results:', error);
+                        resultsContainer.innerHTML = '<p>An error occurred. Please try again later.</p>';
+                        resultsContainer.style.display = 'block';
+                    });
+            } else {
+                resultsContainer.style.display = 'none';
+            }
+        });
+
+        // Close search results on click outside the search input and results container
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.search') && !event.target.closest('.results')) {
+                searchInput.value = '';
+                resultsContainer.style.display = 'none';
+            }
+        });
+    </script>
+    <!-- search results -->
+
+    <!----------------------------- posts----------------------------------------- -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const postsContainer = document.getElementById("posts-container");
+
+            // Fetch posts from the backend
+            fetch("/all-posts")
+                .then(response => response.json())
+                .then(data => {
+                    const posts = data.posts;
+
+                    posts.forEach(post => {
+                        // Create a post div
+                        const postDiv = document.createElement("div");
+                        postDiv.classList.add("post");
+
+                        // Create post header
+                        const postHeader = `
+                            <div class="post-header">
+                                <img src="${post.user.profile_pic || '/static/media/images/defaults/Default_pfp.svg.png'}" alt="Profile Picture">
+                                <div class="post-user-info">
+                                    <span class="post-username">${post.user.name}</span>
+                                    <span class="post-location">${post.user.bio || 'Location unavailable'}</span>
+                                </div>
+                            </div>
+                        `;
+
+                        // Create post media (images or videos)
+                        let postMedia = "";
+                        if (post.is_video && post.media.length > 0) {
+                            postMedia = `
+                                <div class="video-post">
+                                    <div class="video">
+                                        <video class="video__player" controls>
+                                            <source src="${post.media[0]}" type="video/mp4">
+                                        </video>
+                                    </div>
+                                </div>
+                            `;
+                        } else if (post.media.length > 0) {
+                            const slides = post.media.map((url, index) => `
+                                <div class="slide ${index === 0 ? 'active' : ''}">
+                                    <img src="${url}" alt="Post Image ${index + 1}">
+                                </div>
+                            `).join("");
+
+                            const indicators = post.media.map((_, index) => `
+                                <div class="indicator ${index === 0 ? 'active' : ''}"></div>
+                            `).join("");
+
+                            postMedia = `
+                                <div class="post-slides">
+                                    ${slides}
+                                    <div class="slide-nav prev"><i class="fas fa-chevron-left"></i></div>
+                                    <div class="slide-nav next"><i class="fas fa-chevron-right"></i></div>
+                                    <div class="slide-indicators">
+                                        ${indicators}
+                                    </div>
+                                </div>
+                            `;
+                        }
+
+                        // Create post footer
+                        const postFooter = `
+                            <div class="post-footer">
+                                <div class="actions">
+                                    <div class="icons">
+                                        <div class="icon_left d-flex">
+                                            <div class="like">
+                                                <img class="not_loved" src="/static/media/images/defaults/love.png">
+                                                <img class="loved" src="/static/media/images/defaults/heart.png">
+                                            </div>
+                                            <div class="chat">
+                                                <button type="button" class="btn p-0">
+                                                    <img src="/static/media/images/defaults/bubble-chat.png">
+                                                </button>
+                                            </div>
+                                            <div class="send">
+                                                <button type="button" class="btn p-0">
+                                                    <img src="/static/media/images/defaults/send.png">
+                                                </button>
+                                            </div>
+                                            <div class="save not_saved">
+                                                <img class="hide saved" src="/static/media/images/defaults/save_black.png">
+                                                <img class="not_saved" src="/static/media/images/defaults/save-instagram.png">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p><b>Liked by</b> <span class="likes">200 others</span></p>
+                                <div id="comments-container-${post.id}"><p><b>${post.user.name}:</b> ${post.content}</p></div>
+                                <span class="post-date">${post.created_at}</span>
+                            </div>
+                        `;
+
+                        // Add comment section
+                        const addComment = `
+                            <div class="add-comment">
+                                <img src="${post.user.profile_pic || '/static/media/images/defaults/Default_pfp.svg.png'}" alt="Profile Picture">
+                                <input type="text" id="comment-input-${post.id}" placeholder="Add a comment...">
+                                <button class="add-comment-btn" data-post-id="${post.id}">Post</button>
+                            </div>
+                        `;
+
+                        // Append all parts to postDiv
+                        postDiv.innerHTML = postHeader + postMedia + postFooter + addComment;
+
+                        // Append the post to the posts container
+                        postsContainer.appendChild(postDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching posts:", error);
+                });
+        });
+
+
+    </script>
+
+    <!--------------------------- posts end-------------------------------------------- -->
+
+    <!-- add comment -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.addEventListener("click", function (event) {
+                if (event.target && event.target.matches("button.add-comment-btn")) {
+                    const postId = event.target.dataset.postId; // Post ID from data attribute
+                    const commentInput = document.querySelector(`#comment-input-${postId}`);
+                    const commentContent = commentInput.value;
+
+                    if (commentContent === "") {
+                        alert("Comment cannot be empty.");
+                        return;
+                    }
+
+                    fetch(`/comment/${postId}/`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCSRFToken(),
+                        },
+                        body: JSON.stringify({ content: commentContent }),
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error("Failed to add comment.");
+                            }
+                            return response.json();
+                        })
+                        .then((data) => {
+                            if (data.success) {
+                                const commentsContainer = document.querySelector(`#comments-container-${postId}`);
+                                const newCommentHTML = `
+                                    <p><b>${data.comment.user_name}:</b> ${data.comment.content}</p>
+                                `;
+                                commentsContainer.insertAdjacentHTML("beforeend", newCommentHTML);
+                                commentInput.value = ""; // Clear input field
+                            } else {
+                                alert(data.error || "Error adding comment.");
+                            }
+                        })
+                        .catch((error) => {
+                            console.error("Error:", error);
+                            alert("An error occurred while adding the comment.");
+                        });
+                }
+            });
+
+            function getCSRFToken() {
+                const cookies = document.cookie.split(";");
+                for (const cookie of cookies) {
+                    const [name, value] = cookie.trim().split("=");
+                    if (name === "csrftoken") {
+                        return decodeURIComponent(value);
+                    }
+                }
+                return null;
+            }
+        });
+
+    </script>
+
+    <!-- change theme -->
+    <script>
+        // Function to apply a theme (you can reuse this for different themes)
+        function applyTheme(themeName) {
+            const header = document.querySelector('header');
+            const sidebar = document.querySelector('.sidebar');
+            const suggestions = document.querySelector('.suggestions');
+            const posts = document.querySelectorAll('.post');
+            const input = document.querySelector('input');
+            const body = document.body;
+
+            // Clear any existing theme classes (Important!)
+            header.classList.remove('glassmorphic-purple', 'glassmorphic-dark', 'glassmorphic-default'); // Add other theme names
+            sidebar.classList.remove('glassmorphic-purple', 'glassmorphic-dark', 'glassmorphic-default');
+            posts.forEach(post => post.classList.remove('glassmorphic-purple', 'glassmorphic-dark', 'glassmorphic-default'));
+
+            if (themeName === 'purple-theme') {
+                header.classList.add('glassmorphic-purple');
+                sidebar.classList.add('glassmorphic-purple');
+                suggestions.classList.add('glassmorphic-purple');
+                posts.forEach(post => post.classList.add('glassmorphic-purple'));
+                body.style.backgroundColor = 'rgba(138, 45, 157, 0.6)';
+            } else if (themeName === 'dark-theme') {
+                // ... (apply dark theme styles)
+            } else { // Default theme
+                // ... apply default theme styles ...
+            }
+        }
+
+
+
+        // On page load, check for stored theme and apply it:
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('selected-theme');
+            if (savedTheme) {
+                applyTheme(savedTheme);
+            } else {
+                // Apply a default theme if nothing is saved
+                applyTheme('default-theme'); // Or whatever your default is
+            }
+        });
+
+        // Event listeners for the theme dots
+        const themeDots = document.querySelectorAll('.theme-dots .dot');
+        themeDots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                const selectedTheme = dot.dataset.theme;
+                localStorage.setItem('selected-theme', selectedTheme); // Store the theme
+                applyTheme(selectedTheme); // Apply it visually
+            });
+        });
+    </script>
+    <!-- change theme -->
+    <!-- add comment -->
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'owlcarousel/jquery.min.js' %}"></script>
+    <script src="{% static 'owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/carousel.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+
+</html>

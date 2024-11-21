@@ -1,0 +1,222 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram</title>
+    <link rel="stylesheet" href="{% static './sass/vender/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static './sass/vender/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static './owlcarousel/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static './owlcarousel/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static './sass/main.css' %}">>
+</head>
+
+<body>
+
+    <div class="notification_page">
+        <!--***** nav menu start ****** -->
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <a href="/"><img src="{% static 'media/images/defaults/logoblack.png' %} " alt="Logo" /></a>
+            </div>
+            <div class="header-icons">
+                <i class="fa fa-search" id="mobile-search-icon"></i>
+                <a href="chat"><i class="fa fa-comments" id="dms-icon"></i></a>
+                <a href="coubs"><i class="fa-solid fa-play"></i></a>
+                <div class="profile-dropdown">
+                    <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-icon">
+                    <div class="profile-dropdown-menu">
+                        <a href="profile">Profile</a>
+                        <a href="logout">Logout</a>
+                        <div class="theme-dots">
+                            <div class="dot white" data-theme="default-theme"></div>
+                            <div class="dot purple" data-theme="purple-theme"></div>
+                            <div class="dot dark" data-theme="dark-theme"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="account">
+                <img src="{% static 'media/images/defaults/Default_pfp.svg.png' %}" alt="Profile Picture"
+                    class="account-dp">
+                <div class="account-info">
+                    <span class="account-name">{{ user_profile.name }}</span>
+                    <span class="account-username">{{ user_profile.role }}</span>
+                </div>
+                <!-- <div class="switch-account">
+                    <a href="#">Switch</a>
+                </div> -->
+            </div>
+            <ul>
+                <li class="active"><a href="/"><i class="fa fa-home"></i> Feed</a></li>
+                <li><a href="explore"><i class="fa fa-compass"></i> Explore</a></li>
+                <li><a href="coubs"><i class="fa-solid fa-play"></i> Coubs</a></li>
+                <li><a href=""><i class="fa fa-shopping-bag"></i> Shop</a></li>
+                <li><a href="#"><i class="fa fa-bookmark"></i> Saved</a></li>
+                <li><a href="#"><i class="fa fa-chart-line"></i> Insights</a></li>
+                <li><a href="#"><i class="fa fa-archive"></i> Archive</a></li>
+                <!-- <li><a href="#"><i class="fa fa-qrcode"></i> QR Code</a></li> -->
+                <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                <!-- <li class="logout"><a href="#"><i class="fa fa-sign-out-alt"></i> Logout</a></li> -->
+            </ul>
+        </aside>
+        <!-- notification -->
+        <div id="notification" class="notification_section">
+            <h2>Notifications</h2>
+            <div class="notifications">
+                <div class="notif follow_notif">
+                    <div class="cart">
+                        <div>
+                            <div class="img">
+                                <img src="./images/profile_img.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <p class="name">
+                                    Zineb_essoussi
+                                    <span class="desc">started following you.</span>
+                                    <span class="time">2h</span>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="follow_you">
+                            <button class="follow_text">Follow</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notif follow_notif">
+                    <div class="cart">
+                        <div>
+                            <div class="img">
+                                <img src="./images/profile_img.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <p class="name">
+                                    Zineb_essoussi
+                                    <span class="desc">started following you.</span>
+                                    <span class="time">2h</span>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="follow_you">
+                            <button class="follow_text">Follow</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notif story_notif">
+                    <div class="cart">
+                        <div>
+                            <div class="img">
+                                <img src="./images/profile_img.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <div class="info">
+                                    <p class="name">
+                                        Zineb_essoussi
+                                        <span class="desc">liked your story.</span>
+                                        <span class="time">2d</span>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="story_like">
+                            <img src="./images/img2.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="notif follow_notif">
+                    <div class="cart">
+                        <div>
+                            <div class="img">
+                                <img src="./images/profile_img.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <p class="name">
+                                    Zineb_essoussi
+                                    <span class="desc">started following you.</span>
+                                    <span class="time">2h</span>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="follow_you">
+                            <button class="follow_text">Follow</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="notif story_notif">
+                    <div class="cart">
+                        <div>
+                            <div class="img">
+                                <img src="./images/profile_img.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <div class="info">
+                                    <p class="name">
+                                        Zineb_essoussi
+                                        <span class="desc">liked your story.</span>
+                                        <span class="time">2d</span>
+                                    </p>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="story_like">
+                            <img src="./images/img2.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="notif follow_notif">
+                    <div class="cart">
+                        <div>
+                            <div class="img">
+                                <img src="./images/profile_img.jpg" alt="">
+                            </div>
+                            <div class="info">
+                                <p class="name">
+                                    Zineb_essoussi
+                                    <span class="desc">started following you.</span>
+                                    <span class="time">2h</span>
+                                </p>
+
+                            </div>
+                        </div>
+                        <div class="follow_you">
+                            <button class="follow_text">Follow</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+        crossorigin="anonymous"></script>
+    <script src="{% static './owlcarousel/jquery.min.js' %}"></script>
+    <script src="{% static './owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static './js/carousel.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+    <script src="{% static './js/main.js' %}"></script>
+</body>
+
+</html>

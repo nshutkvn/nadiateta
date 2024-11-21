@@ -1,0 +1,567 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouthPlatform | {{ profile_user.name }}</title>
+    <link rel="stylesheet" href="{% static './sass/vender/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static './sass/vender/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static './owlcarousel/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="{% static './owlcarousel/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static './sass/main.css' %}">
+    <style>
+        .success {
+            color: green;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .img-square {
+            width: 100%;
+            height: 500px;
+            /* You can adjust this height to fit your desired square dimension */
+            object-fit: cover;
+            /* Ensures images scale and fill the square while maintaining aspect ratio */
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="post_page">
+        <header class="header" style="margin: 20px;">
+            <div class="logo">
+                <a href="/"><img src="{% static 'media/images/defaults/logoblack.png' %} " alt="Logo" /></a>
+            </div>
+            <center>
+                <div class="search">
+                    <input type="text" id="search" placeholder="Search...">
+                    <div class="results" style="display: none;"></div>
+                </div>
+            </center>
+            <div class="header-icons">
+                <i class="fa fa-search" id="mobile-search-icon"></i>
+                <a href="{% url 'chat' %}"><i class="fa fa-comments" id="dms-icon"></i></a>
+                <a href="{% url 'coubs' %}"><i class="fa-solid fa-play"></i></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#create_modal"><i class="fa-solid fa-plus"></i></a>
+                <div class="profile-dropdown">
+                    <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-icon">
+                    <div class="profile-dropdown-menu">
+                        <a href="{% url 'profile' username=user_profile.username %}">Profile</a>
+                        <a href="{% url 'logout' ">Logout</a>
+                        <div class="theme-dots">
+                            <div class="dot white"></div>
+                            <div class="dot purple"></div>
+                            <div class="dot dark"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <aside class="sidebar" style="margin-left: 20px;">
+            <div class="account">
+                <img src="{{ user_profile.profile_pic.url }}" alt="Profile Picture" class="account-dp">
+                <div class="account-info">
+                    <span class="account-name">{{ user_profile.name }}</span>
+                    <span class="account-username">{{ user_profile.role }}</span>
+                </div>
+                <!-- <div class="switch-account">
+                    <a href="#">Switch</a>
+                </div> -->
+            </div>
+            <ul>
+                <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+                <!-- <li><a href="#"><i class="fa fa-compass"></i> Explore</a></li> -->
+                <li><a href="{% url 'coubs' %}"><i class="fa fa-video"></i> Coubs</a></li>
+                <li><a href="{% url 'chat' %}"><i class="fa fa-comments" id="dms-icon"></i> Chat</a></li>
+                <!-- <li><a href="#"><i class="fa fa-bookmark"></i> Saved</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-chart-line"></i> Insights</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-archive"></i> Archive</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-qrcode"></i> QR Code</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li> -->
+                <li class="logout"><a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+        <!--***** nav menu end ****** -->
+
+        <div class="profile_container">
+            <div class="profile_info">
+                <div class="cart">
+                    <div class="img">
+                        <img src="{{ profile_user.profile_pic.url }}" alt="">
+                    </div>
+                    <div class="info">
+                        <p class="name">
+                            {{ profile_user.name }}
+
+                            {% if profile_user.username == user_profile.username %}
+                            <button class="edit_profile">
+                                Edit profile
+                            </button>
+                            {% else %}
+                            <a href="{% url 'private_chat' username=profile_user.username %}" class="edit_profile">
+                                Message (private)
+                            </a>
+                            {% endif %}
+                        </p>
+                        <div class="general_info">
+                            {% if profile_user.role == "mentor" %}
+                            <p><span>Area of expertise</span><b> {{ profile_user.area_of_interest }}</b></p>
+                            {% else %}
+                            <p><span>Area of interest</span><b> {{ profile_user.area_of_interest }}</b></p>
+                            {% endif %}
+                            <!-- <p><span>137</span> following</p> -->
+                        </div>
+                        <p class="nick_name">@{{ profile_user.username }}</p>
+                        <p class="desc">
+                            {{ profile_user.bio }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="posts_profile">
+                <ul class="nav-pills w-100 d-flex justify-content-center" id="pills-tab" role="tablist">
+                    <li class="nav-item mx-2" role="presentation">
+                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home"
+                            aria-selected="true">
+                            <img src="{% static './media/images/defaults/feed.png' %}" alt="posts">
+                            UPLOADS
+                        </button>
+                    </li>
+                    <!-- <li class="nav-item mx-2" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile"
+                            aria-selected="false">
+                            <img src="{% static './media/images/defaults/save-instagram.png' %}" alt="saved posts">
+                            SAVED
+                        </button>
+                    </li> -->
+                    <!-- <li class="nav-item mx-2" role="presentation">
+                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact"
+                            aria-selected="false">
+                            <img src="{% static './media/images/defaults/tagged.png' %}" alt="tagged posts">
+                            TAGGED
+                        </button>
+                    </li> -->
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                        aria-labelledby="pills-home-tab" tabindex="0">
+                        <div id="posts_sec" class="post">
+                            {% for post in user_posts %}
+                            <a type="button" class="" data-bs-toggle="modal" data-bs-target="#postModal"
+                                onclick="loadPostDetails('{{ post.id }}')">
+                                <div class="item">
+                                    {% with post.postmedia_set.all|first as first_media %}
+                                        {% if post.is_video %}
+                                        <video class="img-fluid item_video" autoplay muted loop>
+                                            <source src="{{ first_media.media.url }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        {% else %}
+                                        <img class="img-fluid item_img" src="{{ first_media.media.url }}" alt="Post Media">
+                                        {% endif %}
+                                    {% endwith %}
+                                </div>
+                            </a>
+                            {% endfor %}                            
+
+
+                        </div>
+                        <!-- Modal -->
+                        <div class="modal fade" id="postModal" tabindex="-1" aria-labelledby="postModalLabel"
+                            aria-hidden="true">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <div id="errorMessage" style="display: none; color: red; text-align: center;">
+                                        </div>
+                                        <h5 class="modal-title" id="postModalLabel"></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Post Content Section -->
+                                        <div class="row">
+                                            <!-- Media Carousel -->
+                                            <div class="col-md-6">
+                                                <div id="postCarousel" class="carousel slide" data-bs-ride="carousel">
+                                                    <div class="carousel-inner">
+                                                        <!-- Media items will be dynamically populated -->
+                                                    </div>
+                                                    <button class="carousel-control-prev" type="button" data-bs-target="#postCarousel" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Previous</span>
+                                                    </button>
+                                                    <button class="carousel-control-next" type="button" data-bs-target="#postCarousel" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                        <span class="visually-hidden">Next</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+
+                                            <!-- Post Info -->
+                                            <div class="col-md-6">
+                                                <!-- User Info Section -->
+                                                <div id="postUserInfo" class="mb-3">
+                                                    <h4 id="postUserName"></h4>
+                                                </div>
+
+                                                <p id="postContent"></p>
+                                                <p class="text-muted">Posted on <span id="postDate"></span></p>
+                                                <hr>
+
+                                                <!-- Comments Section -->
+                                                <h5>Feedback</h5>
+                                                <ul id="commentsList" class="list-group">
+                                                    <!-- Comments will be dynamically populated -->
+                                                </ul>
+
+                                                <!-- Add a comment -->
+                                                <div class="mt-3">
+                                                    <h6>Leave feedback</h6>
+                                                    <textarea id="commentInput" class="form-control" rows="3"
+                                                        placeholder="Write your comment..."></textarea>
+                                                    <button id="submitCommentBtn" class="btn btn-primary mt-2">Submit
+                                                        Feedback</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                    <!-- <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab"
+                        tabindex="0">
+                        <div id="saved_sec" class="post">
+                            <div class="item">
+                                <img class="img-fluid item_img" src="https://i.ibb.co/6WvdZS9/account12.jpg" alt="">
+                            </div>
+                            <div class="item">
+                                <img class="img-fluid item_img" src="https://i.ibb.co/pJ8thst/account13.jpg" alt="">
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab"
+                        tabindex="0">
+                        <div id="tagged" class="post">
+                            <div class="item">
+                                <img class="img-fluid item_img" src="https://i.ibb.co/Zhc5hHp/account4.jpg" alt="">
+                            </div>
+                            <div class="item">
+                                <img class="img-fluid item_img" src="https://i.ibb.co/SPTNbJL/account5.jpg" alt="">
+                            </div>
+                        </div>
+                    </div> -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="create_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <form id="upload-form" action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>  <!-- Added needs-validation and novalidate -->
+                    {% csrf_token %}
+                    <div class="mb-3">  <!-- Media Upload -->
+                        <label for="media-upload" class="form-label">Upload Media:</label>
+                        <input type="file" class="form-control" id="media-upload" name="media" accept="image/*,video/*" multiple required>
+                        <div class="invalid-feedback">Please select at least one media file.</div>  <!-- Validation feedback -->
+                    </div>
+                
+                    <div class="mb-3">  <!-- Description -->
+                        <label for="description" class="form-label">Description:</label>
+                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Add a description..." required></textarea>
+                        <div class="invalid-feedback">Please enter a description.</div>  <!-- Validation feedback -->
+                    </div>
+                
+                    <input type="hidden" id="is_video" name="is_video" value="false">
+                
+                    <button type="submit" class="btn btn-primary">Upload</button>
+                </form>
+                
+                <script>
+                    // Example starter JavaScript for disabling form submissions if there are invalid fields
+                    (() => {
+                        'use strict'
+                
+                        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                        const forms = document.querySelectorAll('.needs-validation')
+                
+                        // Loop over them and prevent submission
+                        Array.from(forms).forEach(form => {
+                            form.addEventListener('submit', event => {
+                                if (!form.checkValidity()) {
+                                    event.preventDefault()
+                                    event.stopPropagation()
+                                }
+                
+                                form.classList.add('was-validated') // Add was-validated class for styling
+                            }, false)
+                        })
+                    })()
+                
+                    // ... (your existing JavaScript for handling the is_video input)
+
+                    const uploadForm = document.getElementById('upload-form');
+                    const mediaUpload = document.getElementById('media-upload');
+                    const isVideoInput = document.getElementById('is_video');
+                
+                    mediaUpload.addEventListener('change', function() {
+                        const files = this.files;
+                        isVideoInput.value = "false"; // Default to false
+                
+                        if (files.length === 1 && files[0].type.startsWith('video/')) {
+                            isVideoInput.value = "true"; // Single video file
+                        }
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- search results -->
+    <script>
+        const searchInput = document.getElementById('search');
+        const resultsContainer = document.querySelector('.results');
+
+        searchInput.addEventListener('input', (event) => {
+            const query = event.target.value.trim();
+
+            if (query.length > 0) {
+                // Make your AJAX request here to fetch search results
+                // Replace this with your actual API call
+                fetch(`/search/users/?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Display search results in the results container
+                        resultsContainer.innerHTML = ''; // Clear previous results
+
+                        if (data.users.length > 0) {
+                            data.users.forEach(user => {
+                                const userLink = document.createElement('a');
+                                userLink.href = `/profile/${user.username}/`;
+                                userLink.innerHTML = `
+                      <div class="cart">
+                        <div class="img">
+                          <img src="${user.profile_pic || '/path/to/default/image.png'}" alt="${user.username}'s profile picture">
+                        </div>
+                        <div class="info">
+                          <p class="name">${user.name}</p>
+                          <p class="name">@${user.username}</p>
+                        </div>
+                      </div>
+                    `;
+                                resultsContainer.appendChild(userLink);
+                            });
+                            resultsContainer.style.display = 'block';
+                        } else {
+                            resultsContainer.innerHTML = '<p>No results found.</p>';
+                            resultsContainer.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching search results:', error);
+                        resultsContainer.innerHTML = '<p>An error occurred. Please try again later.</p>';
+                        resultsContainer.style.display = 'block';
+                    });
+            } else {
+                resultsContainer.style.display = 'none';
+            }
+        });
+
+        // Close search results on click outside the search input and results container
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.search') && !event.target.closest('.results')) {
+                searchInput.value = '';
+                resultsContainer.style.display = 'none';
+            }
+        });
+    </script>
+    <!-- search results -->
+
+
+
+    <!-- load posts -->
+
+    <script>
+        // Function to load post details
+        function loadPostDetails(postId) {
+            // Make an AJAX request to fetch post details
+            fetch(`/get-post-details/${postId}/`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch post details.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Check if there's an error in the response
+                    if (data.error) {
+                        document.getElementById("errorMessage").innerText = data.error;
+                        document.getElementById("errorMessage").style.display = "block";
+                        return;
+                    }
+
+                    // Hide error message if it's visible
+                    document.getElementById("errorMessage").style.display = "none";
+
+                    // Populate post details
+                    document.getElementById("postModalLabel").innerText = data.title;
+                    document.getElementById("postContent").innerText = data.content;
+                    document.getElementById("postDate").innerText = data.created_at;
+
+                    // Populate user info
+                    const userInfo = document.getElementById("postUserInfo");
+                    userInfo.innerHTML = `
+                <img src="${data.user.profile_pic || '/static/default-profile.png'}" alt="${data.user.name}" class="rounded-circle me-2" style="width: 50px; height: 50px;">
+                <strong>${data.user.name}</strong> (@${data.user.username})
+                <p class="text-muted">${data.user.bio || ''}</p>
+            `;
+
+                    // Populate carousel
+                    const carouselInner = document.querySelector("#postCarousel .carousel-inner");
+                    carouselInner.innerHTML = ""; // Clear any existing content
+                    data.media.forEach((url, index) => {
+                        const activeClass = index === 0 ? "active" : "";
+                        const carouselItem = `
+                    <div class="carousel-item ${activeClass}">
+                        <img src="${url}" class="d-block w-100" alt="Post Media">
+                    </div>
+                `;
+                        carouselInner.innerHTML += carouselItem;
+                    });
+
+                    // Populate comments
+                    const commentsList = document.getElementById("commentsList");
+                    commentsList.innerHTML = ""; // Clear any existing comments
+                    data.comments.forEach(comment => {
+                        const commentItem = `
+                    <li class="list-group-item">
+                        <div class="d-flex align-items-center">
+                            <img src="${comment.user_profile_pic || '/static/default-profile.png'}" alt="${comment.user_name}" class="rounded-circle me-2" style="width: 40px; height: 40px;">
+                            <div>
+                                <strong>${comment.user_name}</strong> (@${comment.user_username})
+                                <p class="text-muted small">${comment.created_at}</p>
+                            </div>
+                        </div>
+                        <p>${comment.content}</p>
+                    </li>
+                `;
+                        commentsList.innerHTML += commentItem;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching post details:", error);
+                    document.getElementById("errorMessage").innerText = "An error occurred while loading the post details.";
+                    document.getElementById("errorMessage").style.display = "block";
+                });
+        }
+
+        // Submit comment functionality
+        document.getElementById("submitCommentBtn").addEventListener("click", () => {
+            const commentInput = document.getElementById("commentInput");
+            const comment = commentInput.value.trim();
+
+            if (!comment) {
+                alert("Please write a comment before submitting.");
+                return;
+            }
+
+            // TODO: Add logic to submit the comment (requires additional API endpoint)
+            console.log("Submitting comment:", comment);
+            commentInput.value = ""; // Clear the input after submission
+        });
+
+
+        function formatPostDate(postDate) {
+            const now = new Date();
+            const secondsAgo = Math.floor((now - postDate) / 1000);
+            const minutesAgo = Math.floor(secondsAgo / 60);
+            const hoursAgo = Math.floor(minutesAgo / 60);
+            const daysAgo = Math.floor(hoursAgo / 24);
+            const weeksAgo = Math.floor(daysAgo / 7);
+
+            if (secondsAgo < 60) {
+                return `${secondsAgo} second${secondsAgo !== 1 ? 's' : ''} ago`;
+            } else if (minutesAgo < 60) {
+                return `${minutesAgo} minute${minutesAgo !== 1 ? 's' : ''} ago`;
+            } else if (hoursAgo < 24) {
+                return `${hoursAgo} hour${hoursAgo !== 1 ? 's' : ''} ago`;
+            } else if (daysAgo < 7) {
+                return `${daysAgo} day${daysAgo !== 1 ? 's' : ''} ago`;
+            } else {
+                return `${weeksAgo} week${weeksAgo !== 1 ? 's' : ''} ago`;
+            }
+        }
+
+    </script>
+
+    <!-- script hide fade -->
+
+    <script>
+
+        // Function to handle the dynamically added modal backdrop
+        function handleModalBackdrop(mutationList) {
+            for (const mutation of mutationList) {
+                if (mutation.type === 'childList') {
+                    const newElements = mutation.addedNodes;
+                    for (const newElement of newElements) {
+                        if (newElement.classList.contains('modal-backdrop')) {
+                            newElement.classList.add('hide'); // Add the 'hide' class
+                        }
+                    }
+                }
+            }
+        }
+
+        // Create a MutationObserver to monitor DOM changes
+        const observer = new MutationObserver(handleModalBackdrop);
+
+        // Start observing the entire document for child list mutations
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        //form submit
+
+    </script>
+    <!-- script hide fade -->
+
+    <!-- load posts -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+        crossorigin="anonymous"></script>
+    <script src="{% static './owlcarousel/jquery.min.js' %}"></script>
+    <script src="{% static './owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static './js/carousel.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalize Registration | YouthPlatform</title>
+    <style>
+        /* Basic Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #666;
+            display: block;
+            margin-bottom: 5pFx;
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        input[type="file"] {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .text-green-500 {
+            color: #28a745;
+        }
+
+        .text-red-500 {
+            color: #dc3545;
+        }
+
+        .text-yellow-500 {
+            color: #ffc107;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        fieldset{
+            max-width: 500px;
+        }
+        fieldset input{
+            display: flex;
+            flex-direction: row;
+        }
+        fieldset legend{
+            padding: 10px;
+        }
+
+        .loading-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-modal.active {
+            display: flex;
+        }
+
+        .loading-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Finalize Registration</h1>
+        <form enctype="multipart/form-data" id="additional-info-form" action="save-additional-data/" method="post">
+            {% csrf_token %}
+
+            <div id="form-feedback"></div> <!-- Feedback container -->
+
+            <!-- Role Selector -->
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role">
+                    <option value="youth">Youth</option>
+                    <option value="mentor">Mentor</option>
+                </select>
+            </div>
+
+            <!-- <div id="user-fields"> -->
+                <div class="form-group">
+                    <label for="username">Name</label>
+                    <input type="text" placeholder="Username" id="name" name="name" required>
+                    <div id="username-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" placeholder="Username" id="username" name="username" required>
+                    <div id="username-feedback"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="bio">Bio</label>
+                    <textarea name="bio" placeholder="Bio" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="profile_pic">Profile Picture (optional)</label>
+                    <input type="file" id="profile_pic" name="profile_pic">
+                </div>
+
+                <div class="form-group">
+                    <label for="area_of_interest">Area of Interest</label>
+                    <select name="area_of_interest" required>
+                        <option value="" disabled selected>Area of Interest</option>
+                        <option value="painting">Painting</option>
+                        <option value="drawing">Drawing</option>
+                        <option value="photography">Photography</option>
+                        <option value="music">Music</option>
+                        <option value="writing">Writing</option>
+                    </select>
+                </div>
+            <!-- </div> -->
+            <input type="hidden" name="user_id" value="{{ user_id }}">
+
+            <button type="submit" class="btn-primary">Save</button>
+        </form>
+
+    </div>   
+
+    <script>
+        $(document).on('submit', '#additional-info-form', function (e) {
+            e.preventDefault();
+        
+            $.ajax({
+                type: 'POST',
+                url: '/save-additional-data',
+                data: new FormData(this),
+                processData: false,
+                contentType: false,
+                success: function (response) {
+                    // Redirect to the profile page on success
+                    if (response.redirect_url) {
+                        window.location.href = response.redirect_url;
+                    }
+                },
+                error: function (xhr) {
+                    const response = xhr.responseJSON;
+                    if (response && response.message) {
+                        // Display the error message in the username feedback div
+                        $('#username-feedback').text(response.message).css('color', 'red').show();
+                    }
+                }
+            });
+        });
+        
+        
+    </script>
+
+   
+</body>
+</html>

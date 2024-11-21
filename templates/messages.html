@@ -1,0 +1,451 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouthPlatform | Chat</title>
+    <link rel="stylesheet" href="{% static 'sass/vender/bootstrap.css' %} ">
+    <link rel="stylesheet" href="{% static 'sass/vender/bootstrap.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'owlcarousel/owl.theme.default.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'owlcarousel/owl.carousel.min.css' %} ">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css">
+    <link rel="stylesheet" href="{% static 'sass/main.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/style.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/all.min.css' %} ">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %} ">
+    <style>
+        #chat-container {
+            margin: 0;
+        }
+
+        .response_message a {
+            text-decoration: none;
+            color: #334;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .response_message p {
+            margin-top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="post_page message_page" width="100%">
+
+        <header class="header" style="margin: 20px;">
+            <div class="logo">
+                <a href="/"><img src="{% static 'media/images/defaults/logoblack.png' %} " alt="Logo" /></a>
+            </div>
+            <center>
+                <div class="search">
+                    <input type="text" id="search" placeholder="Search...">
+                    <div class="results" style="display: none;"></div>
+                </div>
+            </center>
+            <div class="header-icons">
+                <i class="fa fa-search" id="mobile-search-icon"></i>
+                <a href="#"><i class="fa fa-comments" id="dms-icon"></i></a>
+                <a href="{% url 'coubs' %}"><i class="fa-solid fa-play"></i></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#create_modal"><i class="fa-solid fa-plus"></i></a>
+                <div class="profile-dropdown">
+                    <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-icon">
+                    <div class="profile-dropdown-menu">
+                        <a href="{% url 'profile' user_profile.username %}">Profile</a>
+                        <a href="{% url 'logout' %}">Logout</a>
+                        <div class="theme-dots">
+                            <div class="dot white"></div>
+                            <div class="dot purple"></div>
+                            <div class="dot dark"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <aside class="sidebar" style="margin-left: 20px;">
+            <div class="account">
+                <img src="{{ user_profile.profile_pic.url }}" alt="Profile Picture" class="account-dp">
+                <div class="account-info">
+                    <span class="account-name">{{ user_profile.name }}</span>
+                    <span class="account-username">{{ user_profile.username }}</span>
+                </div>
+                <!-- <div class="switch-account">
+                <a href="#">Switch</a>
+            </div> -->
+            </div>
+            <ul>
+                <li><a href="/"><i class="fa fa-home"></i> Feed</a></li>
+                <!-- <li><a href="explore"><i class="fa fa-compass"></i> Explore</a></li> -->
+                <li><a href="{% url 'coubs' %}"><i class="fa-solid fa-play"></i> Coubs</a></li>
+                <li class="active"><a href="#"><i class="fa fa-comments" id="dms-icon"></i> Chat</a></li>
+                <!-- <li><a href="#"><i class="fa fa-bookmark"></i> Saved</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-chart-line"></i> Insights</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-archive"></i> Archive</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-qrcode"></i> QR Code</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li> -->
+                <li class="logout"><a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+        <div id="message">
+            <div class="message_container">
+                <div class="persons">
+                    <div class="account_name">
+                        <p>Zineb_essoussi</p>
+                        <p class="search">
+                            <img src="{% static 'media/images/defaults/edit.png' %} " alt="edit">
+                        </p>
+                    </div>
+                    <div class="account_message">
+                        <!-- <div class="desc">
+                            <p>Messages</p>
+                            <p><a href="#">3 requests</a></p>
+                        </div> -->
+                        {% for room in rooms %}
+                        <a href="{% url 'room' room.slug %}">
+                            <div class="cart">
+                                <div>
+                                    <div class="img">
+                                        <img src="{{ room.profile_pic.url }} " alt="Room/chat Pfp">
+                                    </div>
+                                    <div class="info">
+                                        <p class="name">{{ room.name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="message">
+                    <div class="options">
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">{{ room.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="other">
+                            <a href="#">
+                                <img src="{% static 'media/images/defaults/telephone.png' %} " alt="call">
+                            </a>
+                            <a href="#">
+                                <img src="{% static 'media/images/defaults/video_call.png' %} " alt="video call">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="content" id="chat-container">
+                        {% for message in messages %}
+                        {% if message.user.username == user_profile.username %}
+                        <!-- my message -->
+                        <div class="my_message">
+                            <p class="p_message">{{ message.content }}</p>
+                        </div>
+                        {% else %}
+                        <!-- response message -->
+                        <div class="response_message">
+                            <a href="#" class="username"><span>@{{ message.user.username }}</span></a>
+                            <p class="p_message">{{ message.content }}</p>
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                        <!-- <div class="my_message">
+                            <p class="p_message">hello how are you?</p>
+                        </div>
+                        <div class="response_message" >
+                            <p class="p_message">hi! i'm fine and you?</p>
+                        </div>
+                        <div class="my_message">
+                            <p class="p_message">I'm good </p>
+                        </div>
+                        <div class="response_message">
+                            <p class="p_message">I'll come tomorrow</p>
+                        </div> -->
+
+                    </div>
+                    <!-- <div id="form-wrapper"> -->
+                    <form id="form-wrapper">
+                        <textarea type="text" id="chat-message-input" class="message-text" rows="1.2"></textarea>
+                        <button id="chat-message-submit" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l14 0"></path>
+                                <path d="M13 18l6 -6"></path>
+                                <path d="M13 6l6 6"></path>
+                            </svg>
+                        </button>
+                    </form>
+                    <!-- </div> -->
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="create_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <form id="upload-form" action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>  <!-- Added needs-validation and novalidate -->
+                        {% csrf_token %}
+                        <div class="mb-3">  <!-- Media Upload -->
+                            <label for="media-upload" class="form-label">Upload Media:</label>
+                            <input type="file" class="form-control" id="media-upload" name="media" accept="image/*,video/*" multiple required>
+                            <div class="invalid-feedback">Please select at least one media file.</div>  <!-- Validation feedback -->
+                        </div>
+                    
+                        <div class="mb-3">  <!-- Description -->
+                            <label for="description" class="form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description" rows="4" placeholder="Add a description..." required></textarea>
+                            <div class="invalid-feedback">Please enter a description.</div>  <!-- Validation feedback -->
+                        </div>
+                    
+                        <input type="hidden" id="is_video" name="is_video" value="false">
+                    
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                    
+                    <script>
+                        // Example starter JavaScript for disabling form submissions if there are invalid fields
+                        (() => {
+                            'use strict'
+                    
+                            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+                            const forms = document.querySelectorAll('.needs-validation')
+                    
+                            // Loop over them and prevent submission
+                            Array.from(forms).forEach(form => {
+                                form.addEventListener('submit', event => {
+                                    if (!form.checkValidity()) {
+                                        event.preventDefault()
+                                        event.stopPropagation()
+                                    }
+                    
+                                    form.classList.add('was-validated') // Add was-validated class for styling
+                                }, false)
+                            })
+                        })()
+                    
+                        // ... (your existing JavaScript for handling the is_video input)
+
+                        const uploadForm = document.getElementById('upload-form');
+                        const mediaUpload = document.getElementById('media-upload');
+                        const isVideoInput = document.getElementById('is_video');
+                    
+                        mediaUpload.addEventListener('change', function() {
+                            const files = this.files;
+                            isVideoInput.value = "false"; // Default to false
+                    
+                            if (files.length === 1 && files[0].type.startsWith('video/')) {
+                                isVideoInput.value = "true"; // Single video file
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+        <!-- chat open/join -->
+        {{ room.slug|json_script:"json-roomname" }}
+        <!-- {{ request.user.username|json_script:"json-username" }} -->
+        <input type="hidden" name="username" id="username" value="{{ user_profile.username }}">
+
+        <script>
+            const roomName = JSON.parse(document.getElementById('json-roomname').textContent);
+            //const userName = JSON.parse(document.getElementById('json-username').textContent);
+            const userName = document.querySelector('#username').value;
+            const chatSocket = new WebSocket(
+                'ws://'
+                + window.location.host
+                + '/ws/'
+                + roomName
+                + '/'
+            );
+            console.log('WebSocket URL:', chatSocket.url); // Debugging log
+
+
+            chatSocket.onmessage = function (e) {
+                console.log('onmessage');
+
+                const data = JSON.parse(e.data);
+
+                if (data.message) {
+                    // Log the username for clarification
+                    console.log('Message from username:', data.username);
+
+                    let html = '';
+
+                    if (data.username === userName) {
+                        // My message
+                        html = '<div class="my_message">';
+                        html += '<p class="p_message">' + data.message + '</p>';
+                        html += '</div>';
+                    } else {
+                        // Response message
+                        html = '<div class="response_message">';
+                        html += '<a href="#" class="username">' + '@' + data.username + '</span></a>';
+                        html += '<p class="p_message">' + data.message + '</p>';
+                        html += '</div>';
+                    }
+
+                    // Append the message to the container
+                    document.querySelector('#chat-container').innerHTML += html;
+
+                    scrollToBottom();
+                } else {
+                    alert('The message was empty');
+                }
+            };
+
+
+            chatSocket.onclose = function (e) {
+                console.log('onclose')
+            }
+
+            //
+
+            document.querySelector('#chat-message-input').addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    document.querySelector('#chat-message-submit').click();
+                }
+            });
+
+
+            document.querySelector('#chat-message-submit').onclick = function (e) {
+                e.preventDefault();
+
+                const messageInputDom = document.querySelector('#chat-message-input');
+                const message = messageInputDom.value;
+
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'username': userName,
+                    'room': roomName
+                }))
+
+                messageInputDom.value = '';
+            }
+
+            //
+
+            function scrollToBottom() {
+                const objDiv = document.querySelector('#chat-container');
+                objDiv.scrollTop = objDiv.scrollHeight;
+            }
+
+            scrollToBottom();
+        </script>
+
+        <!-- search results -->
+        <script>
+            const searchInput = document.getElementById('search');
+            const resultsContainer = document.querySelector('.results');
+
+            searchInput.addEventListener('input', (event) => {
+                const query = event.target.value.trim();
+
+                if (query.length > 0) {
+                    // Make your AJAX request here to fetch search results
+                    // Replace this with your actual API call
+                    fetch(`/search/users/?query=${query}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            // Display search results in the results container
+                            resultsContainer.innerHTML = ''; // Clear previous results
+
+                            if (data.users.length > 0) {
+                                data.users.forEach(user => {
+                                    const userLink = document.createElement('a');
+                                    userLink.href = `/profile/${user.username}/`;
+                                    userLink.innerHTML = `
+                      <div class="cart">
+                        <div class="img">
+                          <img src="${user.profile_pic || '/path/to/default/image.png'}" alt="${user.username}'s profile picture">
+                        </div>
+                        <div class="info">
+                          <p class="name">${user.name}</p>
+                          <p class="name">@${user.username}</p>
+                        </div>
+                      </div>
+                    `;
+                                    resultsContainer.appendChild(userLink);
+                                });
+                                resultsContainer.style.display = 'block';
+                            } else {
+                                resultsContainer.innerHTML = '<p>No results found.</p>';
+                                resultsContainer.style.display = 'block';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error fetching search results:', error);
+                            resultsContainer.innerHTML = '<p>An error occurred. Please try again later.</p>';
+                            resultsContainer.style.display = 'block';
+                        });
+                } else {
+                    resultsContainer.style.display = 'none';
+                }
+            });
+
+            // Close search results on click outside the search input and results container
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('.search') && !event.target.closest('.results')) {
+                    searchInput.value = '';
+                    resultsContainer.style.display = 'none';
+                }
+            });
+        </script>
+        <!-- search results -->
+    </div>
+
+    </div>
+    <!-- script hide fade -->
+
+    <script>
+
+        // Function to handle the dynamically added modal backdrop
+        function handleModalBackdrop(mutationList) {
+            for (const mutation of mutationList) {
+                if (mutation.type === 'childList') {
+                    const newElements = mutation.addedNodes;
+                    for (const newElement of newElements) {
+                        if (newElement.classList.contains('modal-backdrop')) {
+                            newElement.classList.add('hide'); // Add the 'hide' class
+                        }
+                    }
+                }
+            }
+        }
+
+        // Create a MutationObserver to monitor DOM changes
+        const observer = new MutationObserver(handleModalBackdrop);
+
+        // Start observing the entire document for child list mutations
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        //form submit
+
+    </script>
+    <!-- script hide fade -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+        crossorigin="anonymous"></script>
+    <script src="{% static 'owlcarousel/jquery.min.js' %}"></script>
+    <script src="{% static 'owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/carousel.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,283 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouthPlatform</title>
+<link rel="stylesheet" href="{% static 'sass/main.css' %} ">
+<link rel="stylesheet" href="{% static 'css/style.css' %} ">
+<link rel="stylesheet" href="{% static 'css/all.min.css' %} ">
+<link rel="stylesheet" href="{% static 'css/fontawesome.min.css' %} ">
+</head>
+
+<body>
+    <div class="post_page message_page" width="100%">
+
+    <header class="header" style="margin: 20px;">
+        <div class="logo">
+            <a href="/"><img src="{% static 'media/images/defaults/logoblack.png' %} " alt="Logo" /></a>
+        </div>
+        <div class="header-icons">
+            <i class="fa fa-search" id="mobile-search-icon"></i>
+            <a href="messages.html"><i class="fa fa-comments" id="dms-icon"></i></a>
+            <a href="coubs.html"><i class="fa-solid fa-play"></i></a>
+            <div class="profile-dropdown">
+                <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-icon">
+                <div class="profile-dropdown-menu">
+                    <a href="profile">Profile</a>
+                    <a href="logout">Logout</a>
+                    <div class="theme-dots">
+                        <div class="dot white"></div>
+                        <div class="dot purple"></div>
+                        <div class="dot dark"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <aside class="sidebar" style="margin-left: 20px;">
+        <div class="account">
+            <img src="{{ user_profile.profile_pic.url }}" alt="Profile Picture" class="account-dp">
+            <div class="account-info">
+                <span class="account-name">{{ user_profile.name }}</span>
+                <span class="account-username">{{ user_profile.username }}</span>
+            </div>
+            <!-- <div class="switch-account">
+                <a href="#">Switch</a>
+            </div> -->
+        </div>
+        <ul>
+            <li class=""><a href="/"><i class="fa fa-home"></i> Feed</a></li>
+            <li><a href="explore"><i class="fa fa-compass"></i> Explore</a></li>
+            <li><a href="coubs"><i class="fa-solid fa-play"></i> Coubs</a></li>
+            <li><a href="#"><i class="fa fa-shopping-bag"></i> Shop</a></li>
+            <li><a href="#"><i class="fa fa-bookmark"></i> Saved</a></li>
+            <li><a href="#"><i class="fa fa-chart-line"></i> Insights</a></li>
+            <li><a href="#"><i class="fa fa-archive"></i> Archive</a></li>
+            <!-- <li><a href="#"><i class="fa fa-qrcode"></i> QR Code</a></li> -->
+            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+            <!-- <li class="logout"><a href="#"><i class="fa fa-sign-out-alt"></i> Logout</a></li> -->
+        </ul>
+    </aside>
+        <div id="message">
+            <div class="message_container">
+                <div class="persons">
+                    <div class="account_name">
+                        <p>Zineb_essoussi</p>
+                        <p class="search">
+                            <img src="{% static 'media/images/defaults/edit.png' %} " alt="edit">
+                        </p>
+                    </div>
+                    <div class="account_message">
+                        <!-- <div class="desc">
+                            <p>Messages</p>
+                            <p><a href="#">3 requests</a></p>
+                        </div> -->
+                        <!-- {% for room in rooms %}
+                        <a href="{% url 'room' room.slug %}">
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">{{ room.name }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                        {% endfor %} -->
+                        <!-- <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">Zineb_essoussi</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">Zineb_essoussi</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">Zineb_essoussi</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">Zineb_essoussi</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">Zineb_essoussi</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">Zineb_essoussi</p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <div class="info">
+                                    <p class="name">Zineb_essoussi</p>
+                                </div>
+                            </div>
+
+                        </div> -->
+                    </div>
+                </div>
+                <div class="message">
+                    <div class="options">
+                        <div class="cart">
+                            <div>
+                                <div class="img">
+                                    <img src="{% static 'media/images/defaults/profile_img.jpg' %} " alt="">
+                                </div>
+                                <!-- <div class="info">
+                                    <p class="name">{{ room.name }}</p>
+                                </div> -->
+                            </div>
+                        </div>
+                        <div class="other">
+                            <a href="#">
+                                <img src="{% static 'media/images/defaults/telephone.png' %} " alt="call">
+                            </a>
+                            <a href="#">
+                                <img src="{% static 'media/images/defaults/video_call.png' %} " alt="video call">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="content" id="chat-container">
+                        <!-- <div class="my_message">
+                            <p class="p_message">hello how are you?</p>
+                        </div>
+                        <div class="response_message" >
+                            <p class="p_message">hi! i'm fine and you?</p>
+                        </div>
+                        <div class="my_message">
+                            <p class="p_message">I'm good </p>
+                        </div>
+                        <div class="response_message">
+                            <p class="p_message">I'll come tomorrow</p>
+                        </div> -->
+                        {% for message in messages %}
+                        {% if message.sender == user_profile %}
+                            <div class="my_message">
+                                <p class="p_message">{{ message.content }}</p>
+                            </div>
+                        {% else %}
+                            <div class="response_message">
+                                <p class="p_message">{{ message.content }}</p>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                    
+
+                    </div>
+                    <!-- <div id="form-wrapper"> -->
+                        <form id="form-wrapper">
+                        <textarea type="text" id="chat-message-input" class="message-text" rows="1.2" ></textarea>
+                        <button id="chat-message-submit" type="submit">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" stroke-width="2"
+                                stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M5 12l14 0"></path>
+                                <path d="M13 18l6 -6"></path>
+                                <path d="M13 6l6 6"></path>
+                            </svg>
+                        </button>
+                    </form>
+                    <!-- </div> -->
+
+                </div>
+            </div>
+        </div>
+
+        <!-- chat open/join -->
+        <!-- {{ room.slug|json_script:"json-roomname" }} -->
+        <!-- {{ request.user.username|json_script:"json-username" }} -->
+        <input type="hidden" name="dm_id" id="dm_id" value="{{ user_profile.username }}">
+
+        <script>
+            const dmId = document.querySelector('#dm_id').value;
+            const userName = "{{ user_profile.username }}";
+            const username = document.querySelector('#dm_id').value;
+            const socket = new WebSocket(`ws://${window.location.host}/ws/dm/${username}/`);
+
+        
+            chatSocket.onmessage = function(e) {
+                const data = JSON.parse(e.data);
+                const message = data.message;
+                const sender = data.username;
+                let html = '';
+        
+                if (sender === userName) {
+                    html = `<div class="my_message"><p class="p_message">${message}</p></div>`;
+                } else {
+                    html = `<div class="response_message"><p class="p_message">${message}</p></div>`;
+                }
+                
+                document.querySelector('#chat-container').innerHTML += html;
+            };
+        
+            document.querySelector('#chat-message-submit').onclick = function(e) {
+                e.preventDefault();
+                const message = document.querySelector('#chat-message-input').value;
+                chatSocket.send(JSON.stringify({
+                    'message': message,
+                    'username': userName
+                }));
+                document.querySelector('#chat-message-input').value = '';
+            };
+        </script>
+         
+
+    </div>
+
+    </div>
+
+
+</html>

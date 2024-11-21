@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouthPlatform | Coubs</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <!-- <header class="header">
+          <div class="logo">
+              <img src="path-to-logo" alt="Logo" />
+          </div>
+          <div class="header-icons">
+              <i class="fa fa-search" id="mobile-search-icon"></i>
+              <i class="fa fa-comments" id="dms-icon"></i>
+              <i class="fa fa-video" id="reels-icon"></i>
+              <div class="profile-dropdown">
+                  <img src="media/images/defaults/Default_pfp.svg.png" alt="Profile" class="profile-icon">
+                  <div class="profile-dropdown-menu">
+                      <a href="#">Profile</a>
+                      <a href="#">Logout</a>
+                      <div class="theme-dots">
+                          <div class="dot white"></div>
+                          <div class="dot purple"></div>
+                          <div class="dot dark"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </header>  -->
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+          <div class="account">
+            <img src="{{ user_profile.profile_pic.url }}" alt="Profile Picture"
+                class="account-dp">
+            <div class="account-info">
+                <span class="account-name">{{ user_profile.name }}</span>
+                <span class="account-username">{{ user_profile.role }}</span>
+            </div>
+            <!-- <div class="switch-account">
+                <a href="#">Switch</a>
+            </div> -->
+        </div>
+            <ul>
+                <li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+                <!-- <li><a href="#"><i class="fa fa-compass"></i> Explore</a></li> -->
+                <li class="active"><a href="#"><i class="fa fa-video"></i> Coubs</a></li>
+                <li><a href="{% url 'chat' %}"><i class="fa fa-comments" id="dms-icon"></i> Chat</a></li>
+                <!-- <li><a href="#"><i class="fa fa-bookmark"></i> Saved</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-chart-line"></i> Insights</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-archive"></i> Archive</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-qrcode"></i> QR Code</a></li> -->
+                <!-- <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li> -->
+                <li class="logout"><a href="{% url 'logout' %}"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="content coubs">
+          <div class="app__videos">
+              {% for post in posts %}
+                  <div class="video">
+                      <!-- Video Player -->
+                      <video class="video__player" src="{{ post.media }}" controls></video>
+  
+                      <!-- Sidebar Actions -->
+                      <div class="videoSidebar">
+                          <div class="videoSidebar__button">
+                              <span class="material-icons">favorite_border</span>
+                              <p>Like</p>
+                          </div>
+                          <div class="videoSidebar__button">
+                              <span class="material-icons">message</span>
+                              <p>Comments</p>
+                          </div>
+                          <div class="videoSidebar__button">
+                              <span class="material-icons">share</span>
+                              <p>Share</p>
+                          </div>
+                      </div>
+  
+                      <!-- Video Footer -->
+                      <div class="videoFooter">
+                          <div class="videoFooter__text">
+                              <h3>{{ post.user.name }}</h3>
+                              <p class="videoFooter__description">{{ post.content }}</p>
+                              <div class="videoFooter__ticker">
+                                  <span class="material-icons videoFooter__icon">music_note</span>
+                                  <marquee>Default Song</marquee>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              {% endfor %}
+          </div>
+      </main>
+    </div>
+    <script src="js/active.js"></script>
+</body>
+</html>
