@@ -1,38 +1,33 @@
 # Youth Creativity and Expression Hub
-The Youth Creativity and Expression Hub is a digital platform designed to empower young individuals by providing a space to explore, showcase, and develop their creative talents. Users can share their work, connect with mentors, collaborate with peers, and participate in events to hone their skills and build their creative portfolios.
+The Youth Creativity and Expression Hub is a digital platform designed to empower young individuals by providing a space to explore, showcase, and develop their creative talents. Users can share their work and connect with mentors.
 
 ## Features
 ### Core Functionalities
-User Profiles:
+**User Profiles:
 Create personalized profiles with bio, areas of interest, and role (e.g., user or mentor).
 
-Content Sharing:
+**Content Sharing:
 Upload and showcase creative works in categories like art, music, writing, and more.
 
-Mentorship:
+**Mentorship:
 Connect with mentors, schedule mentorship sessions, and receive guidance on creative projects.
 
-Collaboration:
-Join groups, collaborate on projects, and discuss ideas in group chats.
-
-Events and Workshops:
-View and register for creative events and competitions hosted on the platform.
-
-Direct Messaging:
+**Direct Messaging:
 Communicate with peers and mentors through a secure messaging system.
 
 ## Installation
 ### Prerequisites
-Python 3.8 or later
-Django 4.2 or later
-PostgreSQL or SQLite (for database)
-Node.js and npm (for frontend dependencies, if applicable)
+authlib ~= 1.2
+django ~= 4.2
+python-dotenv ~= 1.0
+requests ~= 2.31
+daphne ~= 4.1 
+
 ### Setup Instructions
 1. Clone the Repository:
 
 ```sh
-git clone https://github.com/your-username/youth-creativity-hub.git
-cd youth-creativity-hub
+git clone https://github.com/NadiaTeta/YouthTalent.git
 ```
 
 2. Create a Virtual Environment:
