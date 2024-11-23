@@ -3,16 +3,16 @@ The Youth Creativity and Expression Hub is a digital platform designed to empowe
 
 ## Features
 ### Core Functionalities
- **User Profiles:
+**User Profiles:**
 Create personalized profiles with bio, areas of interest, and role (e.g., user or mentor).
 
- **Content Sharing:
+**Content Sharing:**
 Upload and showcase creative works in categories like art, music, writing, and more.
 
-** Mentorship:
+**Mentorship:**
 Connect with mentors, schedule mentorship sessions, and receive guidance on creative projects.
 
-**Direct Messaging:
+**Direct Messaging:**
 Communicate with peers and mentors through a secure messaging system.
 
 ## Installation
@@ -73,12 +73,12 @@ youth-creativity-hub/
 ├── manage.py
 └── requirements.txt
 ```
-1. core/: Handles posts, events, and collaboration tools.
-2. users/: Manages user registration, authentication, and profiles.
-3. chat/: Implements direct messaging and mentorship chat functionalities.
-4. templates/: HTML templates for views.
-5. static/: Static assets like CSS, JS, and images.
-6. media/: User-uploaded files (e.g., profile pictures, creative works).
+**core/: Handles posts, events, and collaboration tools.**
+**users/: Manages user registration, authentication, and profiles.**
+**chat/: Implements direct messaging and mentorship chat functionalities.**
+**templates/: HTML templates for views.**
+**static/: Static assets like CSS, JS, and images.**
+**media/: User-uploaded files (e.g., profile pictures, creative works).**
    
 ## Technologies Used
 1. Backend: Django (Python)
