@@ -3,13 +3,13 @@ The Youth Creativity and Expression Hub is a digital platform designed to empowe
 
 ## Features
 ### Core Functionalities
-**User Profiles:
+ **User Profiles:
 Create personalized profiles with bio, areas of interest, and role (e.g., user or mentor).
 
-**Content Sharing:
+ **Content Sharing:
 Upload and showcase creative works in categories like art, music, writing, and more.
 
-**Mentorship:
+** Mentorship:
 Connect with mentors, schedule mentorship sessions, and receive guidance on creative projects.
 
 **Direct Messaging:
@@ -83,9 +83,8 @@ youth-creativity-hub/
 ## Technologies Used
 1. Backend: Django (Python)
 2. Frontend: HTML, CSS, JavaScript
-3. Database: PostgreSQL/SQLite
+3. Database: MySql
 4. Websockets: Django Channels (for real-time messaging)
-5. Hosting: AWS/Heroku (optional)
    
 ## Contributing
 We welcome contributions! Follow these steps to contribute:
