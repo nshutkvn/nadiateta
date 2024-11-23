@@ -30,8 +30,9 @@ Node.js and npm (for frontend dependencies, if applicable)
 ### Setup Instructions
 1. Clone the Repository:
 
-'''git clone https://github.com/your-username/youth-creativity-hub.git
-cd youth-creativity-hub'''
+'''bash
+git clone https://github.com/your-username/youth-creativity-hub.git
+cd youth-creativity-hub
 
 2. Create a Virtual Environment:
 
