@@ -30,21 +30,22 @@ Node.js and npm (for frontend dependencies, if applicable)
 ### Setup Instructions
 1. Clone the Repository:
 
-bash
-Copy code
-git clone https://github.com/your-username/youth-creativity-hub.git
-cd youth-creativity-hub
+'''git clone https://github.com/your-username/youth-creativity-hub.git
+cd youth-creativity-hub'''
+
 2. Create a Virtual Environment:
 
 bash
 Copy code
 python -m venv venv
 source venv/bin/activate   # On Windows: venv\Scripts\activate
+
 3. Install Dependencies:
 
 bash
 Copy code
 pip install -r requirements.txt
+
 4. Set Up the Database:
 
 Configure the database settings in settings.py.
@@ -52,11 +53,13 @@ Run migrations:
 bash
 Copy code
 python manage.py migrate
+
 5. Run the Development Server:
 
 bash
 Copy code
 python manage.py runserver
+
 6. Access the Application:
 Open your browser and navigate to http://localhost:8000.
 
