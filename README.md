@@ -84,7 +84,7 @@ youth-creativity-hub/
 1. Backend: Django (Python)
 2. Frontend: HTML, CSS, JavaScript
 3. Database: MySql
-4. Websockets: Django Channels (for real-time messaging)
+4. Websocket Server: Daphne ~4.1 (for handling WebSockets)
    
 ## Contributing
 We welcome contributions! Follow these steps to contribute:
