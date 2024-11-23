@@ -30,44 +30,44 @@ Node.js and npm (for frontend dependencies, if applicable)
 ### Setup Instructions
 1. Clone the Repository:
 
-'''sh
+```sh
 git clone https://github.com/your-username/youth-creativity-hub.git
 cd youth-creativity-hub
-'''
+```
 
 2. Create a Virtual Environment:
 
-bash
-Copy code
+```sh
 python -m venv venv
 source venv/bin/activate   # On Windows: venv\Scripts\activate
+```
 
 3. Install Dependencies:
 
-bash
-Copy code
+```sh
 pip install -r requirements.txt
+```
 
 4. Set Up the Database:
 
 Configure the database settings in settings.py.
 Run migrations:
-bash
-Copy code
+
+```sh
 python manage.py migrate
+```
 
 5. Run the Development Server:
 
-bash
-Copy code
+```
 python manage.py runserver
+```
 
 6. Access the Application:
 Open your browser and navigate to http://localhost:8000.
 
 ## Folder Structure
-arduino
-Copy code
+```sh
 youth-creativity-hub/
 ├── core/
 ├── users/
@@ -77,26 +77,30 @@ youth-creativity-hub/
 ├── media/
 ├── manage.py
 └── requirements.txt
-core/: Handles posts, events, and collaboration tools.
-users/: Manages user registration, authentication, and profiles.
-chat/: Implements direct messaging and mentorship chat functionalities.
-templates/: HTML templates for views.
-static/: Static assets like CSS, JS, and images.
-media/: User-uploaded files (e.g., profile pictures, creative works).
+```
+1. core/: Handles posts, events, and collaboration tools.
+2. users/: Manages user registration, authentication, and profiles.
+3. chat/: Implements direct messaging and mentorship chat functionalities.
+4. templates/: HTML templates for views.
+5. static/: Static assets like CSS, JS, and images.
+6. media/: User-uploaded files (e.g., profile pictures, creative works).
+   
 ## Technologies Used
-Backend: Django (Python)
-Frontend: HTML, CSS, JavaScript
-Database: PostgreSQL/SQLite
-Websockets: Django Channels (for real-time messaging)
-Hosting: AWS/Heroku (optional)
+1. Backend: Django (Python)
+2. Frontend: HTML, CSS, JavaScript
+3. Database: PostgreSQL/SQLite
+4. Websockets: Django Channels (for real-time messaging)
+5. Hosting: AWS/Heroku (optional)
+   
 ## Contributing
 We welcome contributions! Follow these steps to contribute:
 
-Fork the repository.
-Create a feature branch: git checkout -b feature-name.
-Commit changes: git commit -m "Add feature".
-Push to your branch: git push origin feature-name.
-Submit a pull request.
+1. Fork the repository.
+2. Create a feature branch: "git checkout -b feature-name".
+3. Commit changes: "git commit -m "Add feature""
+4. Push to your branch: "git push origin feature-name".
+5. Submit a pull request.
+ 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
 
