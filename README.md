@@ -3,7 +3,7 @@ The Youth Creativity and Expression Hub is a digital platform designed to empowe
 
 ## Features
 ### Core Functionalities
-**User Profiles:**
+- **User Profiles:**
 Create personalized profiles with bio, areas of interest, and role (e.g., user or mentor).
 
 **Content Sharing:**
