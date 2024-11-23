@@ -30,7 +30,7 @@ Node.js and npm (for frontend dependencies, if applicable)
 ### Setup Instructions
 1. Clone the Repository:
 
-'''bash
+'''sh
 git clone https://github.com/your-username/youth-creativity-hub.git
 cd youth-creativity-hub
 '''
