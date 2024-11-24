@@ -6,3 +6,4 @@ daphne ~= 4.1
 pillow
 channels
 mysqlclient
+psycopg2-binary

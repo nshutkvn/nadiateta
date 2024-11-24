@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 from dotenv import load_dotenv, find_dotenv
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -90,14 +91,22 @@ CHANNEL_LAYERS = {
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'youthcreativity',
-        'USER': 'root',
-        'PASSWORD': 'BiancA',
-        'HOST': 'localhost',
-    }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'youthcreativity',
+#         'USER': 'root',
+#         'PASSWORD': 'BiancA',
+#         'HOST': 'localhost',
+#     }
+# }
+
+DATABASES ={
+        'default': dj_database_url.config(
+        # Replace this value with your local database's connection string.
+        default='postgresql://youthcreativity_user:bFadRrzDnxMCNaHkDaZtYaegJcDtlgYu@dpg-ct1o8i5umphs738rdc10-a.oregon-postgres.render.com/youthcreativity',
+        conn_max_age=600
+    )
 }
 
 
