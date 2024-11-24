@@ -26,5 +26,7 @@ urlpatterns = [
     # Leave room functionality
     path('room/leave/<slug:slug>/', views.leave_room, name='leave_room'),
     path('create-room/', views.create_room, name='create_room'),
+    path('share-content/', views.share_content, name='share_content'),
+
 
 ]

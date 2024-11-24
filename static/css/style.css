@@ -1285,3 +1285,8 @@ body {
 }
 
 /* ---------dark theme ---------------  */
+
+.list-group{
+  overflow-y: scroll;
+  max-height: 210px;
+}

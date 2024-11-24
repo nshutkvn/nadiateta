@@ -13,6 +13,8 @@ urlpatterns = [
     path("save-additional-data/", views.save_additional_data, name="save_additional_data"),
     path("users-all/", views.fetch_users, name="fetch_users"),
     path('search/users/', views.search_users, name='search_users'),
+    path("update-profile/", views.updateUserProfile, name="updateUserProfile"),
+
 
 
 

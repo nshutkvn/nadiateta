@@ -3,3 +3,5 @@ django ~= 4.2
 python-dotenv ~= 1.0
 requests ~= 2.31
 daphne ~= 4.1 
+pillow
+channels

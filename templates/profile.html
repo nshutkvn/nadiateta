@@ -110,7 +110,7 @@
                             {{ profile_user.name }}
 
                             {% if profile_user.username == user_profile.username %}
-                            <button class="edit_profile">
+                            <button href="#" class="edit_profile" data-bs-toggle="modal" data-bs-target="#updateProfileModal">
                                 Edit profile
                             </button>
                             {% else %}
@@ -171,18 +171,18 @@
                                 onclick="loadPostDetails('{{ post.id }}')">
                                 <div class="item">
                                     {% with post.postmedia_set.all|first as first_media %}
-                                        {% if post.is_video %}
-                                        <video class="img-fluid item_video" autoplay muted loop>
-                                            <source src="{{ first_media.media.url }}" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                        {% else %}
-                                        <img class="img-fluid item_img" src="{{ first_media.media.url }}" alt="Post Media">
-                                        {% endif %}
+                                    {% if post.is_video %}
+                                    <video class="img-fluid item_video" autoplay muted loop>
+                                        <source src="{{ first_media.media.url }}" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                    {% else %}
+                                    <img class="img-fluid item_img" src="{{ first_media.media.url }}" alt="Post Media">
+                                    {% endif %}
                                     {% endwith %}
                                 </div>
                             </a>
-                            {% endfor %}                            
+                            {% endfor %}
 
 
                         </div>
@@ -207,12 +207,16 @@
                                                     <div class="carousel-inner">
                                                         <!-- Media items will be dynamically populated -->
                                                     </div>
-                                                    <button class="carousel-control-prev" type="button" data-bs-target="#postCarousel" data-bs-slide="prev">
-                                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <button class="carousel-control-prev" type="button"
+                                                        data-bs-target="#postCarousel" data-bs-slide="prev">
+                                                        <span class="carousel-control-prev-icon"
+                                                            aria-hidden="true"></span>
                                                         <span class="visually-hidden">Previous</span>
                                                     </button>
-                                                    <button class="carousel-control-next" type="button" data-bs-target="#postCarousel" data-bs-slide="next">
-                                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <button class="carousel-control-next" type="button"
+                                                        data-bs-target="#postCarousel" data-bs-slide="next">
+                                                        <span class="carousel-control-next-icon"
+                                                            aria-hidden="true"></span>
                                                         <span class="visually-hidden">Next</span>
                                                     </button>
                                                 </div>
@@ -284,33 +288,37 @@
     <div class="modal fade" id="create_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <form id="upload-form" action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>  <!-- Added needs-validation and novalidate -->
+                <form id="upload-form" action="{% url 'create_post' %}" method="POST" enctype="multipart/form-data"
+                    class="needs-validation" novalidate> <!-- Added needs-validation and novalidate -->
                     {% csrf_token %}
-                    <div class="mb-3">  <!-- Media Upload -->
+                    <div class="mb-3"> <!-- Media Upload -->
                         <label for="media-upload" class="form-label">Upload Media:</label>
-                        <input type="file" class="form-control" id="media-upload" name="media" accept="image/*,video/*" multiple required>
-                        <div class="invalid-feedback">Please select at least one media file.</div>  <!-- Validation feedback -->
+                        <input type="file" class="form-control" id="media-upload" name="media" accept="image/*,video/*"
+                            multiple required>
+                        <div class="invalid-feedback">Please select at least one media file.</div>
+                        <!-- Validation feedback -->
                     </div>
-                
-                    <div class="mb-3">  <!-- Description -->
+
+                    <div class="mb-3"> <!-- Description -->
                         <label for="description" class="form-label">Description:</label>
-                        <textarea class="form-control" id="description" name="description" rows="4" placeholder="Add a description..." required></textarea>
-                        <div class="invalid-feedback">Please enter a description.</div>  <!-- Validation feedback -->
+                        <textarea class="form-control" id="description" name="description" rows="4"
+                            placeholder="Add a description..." required></textarea>
+                        <div class="invalid-feedback">Please enter a description.</div> <!-- Validation feedback -->
                     </div>
-                
+
                     <input type="hidden" id="is_video" name="is_video" value="false">
-                
+
                     <button type="submit" class="btn btn-primary">Upload</button>
                 </form>
-                
+
                 <script>
                     // Example starter JavaScript for disabling form submissions if there are invalid fields
                     (() => {
                         'use strict'
-                
+
                         // Fetch all the forms we want to apply custom Bootstrap validation styles to
                         const forms = document.querySelectorAll('.needs-validation')
-                
+
                         // Loop over them and prevent submission
                         Array.from(forms).forEach(form => {
                             form.addEventListener('submit', event => {
@@ -318,22 +326,22 @@
                                     event.preventDefault()
                                     event.stopPropagation()
                                 }
-                
+
                                 form.classList.add('was-validated') // Add was-validated class for styling
                             }, false)
                         })
                     })()
-                
+
                     // ... (your existing JavaScript for handling the is_video input)
 
                     const uploadForm = document.getElementById('upload-form');
                     const mediaUpload = document.getElementById('media-upload');
                     const isVideoInput = document.getElementById('is_video');
-                
-                    mediaUpload.addEventListener('change', function() {
+
+                    mediaUpload.addEventListener('change', function () {
                         const files = this.files;
                         isVideoInput.value = "false"; // Default to false
-                
+
                         if (files.length === 1 && files[0].type.startsWith('video/')) {
                             isVideoInput.value = "true"; // Single video file
                         }
@@ -342,6 +350,38 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="updateProfileForm" enctype="multipart/form-data" onsubmit="updateProfile(event)">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateProfileLabel">Update Profile</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="profileName" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="profileName" placeholder="Enter your name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="profileInterest" class="form-label">Area of Interest</label>
+                            <input type="text" class="form-control" id="profileInterest" placeholder="Enter your area of interest">
+                        </div>
+                        <div class="mb-3">
+                            <label for="profilePic" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profilePic" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
 
 
     <!-- search results -->
@@ -426,52 +466,58 @@
                         document.getElementById("errorMessage").style.display = "block";
                         return;
                     }
-
+        
                     // Hide error message if it's visible
                     document.getElementById("errorMessage").style.display = "none";
-
+        
                     // Populate post details
                     document.getElementById("postModalLabel").innerText = data.title;
                     document.getElementById("postContent").innerText = data.content;
                     document.getElementById("postDate").innerText = data.created_at;
-
+        
                     // Populate user info
                     const userInfo = document.getElementById("postUserInfo");
                     userInfo.innerHTML = `
-                <img src="${data.user.profile_pic || '/static/default-profile.png'}" alt="${data.user.name}" class="rounded-circle me-2" style="width: 50px; height: 50px;">
-                <strong>${data.user.name}</strong> (@${data.user.username})
-                <p class="text-muted">${data.user.bio || ''}</p>
-            `;
-
+                        <img src="${data.user.profile_pic || '/static/default-profile.png'}" alt="${data.user.name}" class="rounded-circle me-2" style="width: 50px; height: 50px;">
+                        <strong>${data.user.name}</strong>
+                        <p class="text-muted">${data.user.bio || ''}</p>
+                    `;
+        
+                    // Add delete post button
+                    userInfo.innerHTML += `
+                        <a href="javascript:void(0);" id="deletePostBtn" class="text-danger ms-3" data-post-id="${postId}" title="Delete Post">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    `;
+        
                     // Populate carousel
                     const carouselInner = document.querySelector("#postCarousel .carousel-inner");
                     carouselInner.innerHTML = ""; // Clear any existing content
                     data.media.forEach((url, index) => {
                         const activeClass = index === 0 ? "active" : "";
                         const carouselItem = `
-                    <div class="carousel-item ${activeClass}">
-                        <img src="${url}" class="d-block w-100" alt="Post Media">
-                    </div>
-                `;
+                            <div class="carousel-item ${activeClass}">
+                                <img src="${url}" class="d-block w-100" alt="Post Media">
+                            </div>
+                        `;
                         carouselInner.innerHTML += carouselItem;
                     });
-
+        
                     // Populate comments
                     const commentsList = document.getElementById("commentsList");
                     commentsList.innerHTML = ""; // Clear any existing comments
                     data.comments.forEach(comment => {
                         const commentItem = `
-                    <li class="list-group-item">
-                        <div class="d-flex align-items-center">
-                            <img src="${comment.user_profile_pic || '/static/default-profile.png'}" alt="${comment.user_name}" class="rounded-circle me-2" style="width: 40px; height: 40px;">
-                            <div>
-                                <strong>${comment.user_name}</strong> (@${comment.user_username})
-                                <p class="text-muted small">${comment.created_at}</p>
-                            </div>
-                        </div>
-                        <p>${comment.content}</p>
-                    </li>
-                `;
+                            <li class="list-group-item d-flex justify-content-between align-items-start" id="comment-${comment.comment_id}">
+                                <div>
+                                    <strong>${comment.user_name}</strong>
+                                    <p>${comment.content}</p>
+                                </div>
+                                <a href="javascript:void(0);" class="delete-comment-btn text-danger" data-comment-id="${comment.comment_id}" title="Delete Comment">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </li>
+                        `;
                         commentsList.innerHTML += commentItem;
                     });
                 })
@@ -481,7 +527,7 @@
                     document.getElementById("errorMessage").style.display = "block";
                 });
         }
-
+        
         // Submit comment functionality
         document.getElementById("submitCommentBtn").addEventListener("click", () => {
             const commentInput = document.getElementById("commentInput");
@@ -496,29 +542,6 @@
             console.log("Submitting comment:", comment);
             commentInput.value = ""; // Clear the input after submission
         });
-
-
-        function formatPostDate(postDate) {
-            const now = new Date();
-            const secondsAgo = Math.floor((now - postDate) / 1000);
-            const minutesAgo = Math.floor(secondsAgo / 60);
-            const hoursAgo = Math.floor(minutesAgo / 60);
-            const daysAgo = Math.floor(hoursAgo / 24);
-            const weeksAgo = Math.floor(daysAgo / 7);
-
-            if (secondsAgo < 60) {
-                return `${secondsAgo} second${secondsAgo !== 1 ? 's' : ''} ago`;
-            } else if (minutesAgo < 60) {
-                return `${minutesAgo} minute${minutesAgo !== 1 ? 's' : ''} ago`;
-            } else if (hoursAgo < 24) {
-                return `${hoursAgo} hour${hoursAgo !== 1 ? 's' : ''} ago`;
-            } else if (daysAgo < 7) {
-                return `${daysAgo} day${daysAgo !== 1 ? 's' : ''} ago`;
-            } else {
-                return `${weeksAgo} week${weeksAgo !== 1 ? 's' : ''} ago`;
-            }
-        }
-
     </script>
 
     <!-- script hide fade -->
@@ -550,7 +573,100 @@
     </script>
     <!-- script hide fade -->
 
-    <!-- load posts -->
+    <!-- delete -->
+     <script>
+        document.addEventListener("click", (e) => {
+            // Delete Comment
+            if (e.target.closest(".delete-comment-btn")) {
+                const button = e.target.closest(".delete-comment-btn");
+                const commentId = button.dataset.commentId;
+                if (confirm("Are you sure you want to delete this comment?")) {
+                    fetch(`/delete-comment/${commentId}/`, {
+                        method: "DELETE",
+                        headers: { "X-CSRFToken": getCookie("csrftoken") },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.error) alert(data.error);
+                            else document.getElementById(`comment-${commentId}`).remove();
+                        });
+                }
+            }
+        
+            // Delete Post
+            if (e.target.closest("#deletePostBtn")) {
+                const button = e.target.closest("#deletePostBtn");
+                const postId = button.dataset.postId;
+                if (confirm("Are you sure you want to delete this post?")) {
+                    fetch(`/delete-post/${postId}/`, {
+                        method: "DELETE",
+                        headers: { "X-CSRFToken": getCookie("csrftoken") },
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.error) alert(data.error);
+                            else location.reload(); // Refresh after deletion
+                        });
+                }
+            }
+        });
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+     </script>
+     <!-- delete -->
+
+     <!-- edit profil -->
+      <script>
+        function updateProfile(event) {
+            event.preventDefault();
+        
+            const formData = new FormData();
+            formData.append("name", document.getElementById("profileName").value);
+            formData.append("area_of_interest", document.getElementById("profileInterest").value);
+        
+            const profilePic = document.getElementById("profilePic").files[0];
+            if (profilePic) {
+                formData.append("profile_pic", profilePic);
+            }
+        
+            fetch("/update-profile/", {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "X-CSRFToken": getCookie("csrftoken"), // Ensure CSRF token is included
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById("errorMessage").innerText = data.error;
+                    document.getElementById("errorMessage").style.display = "block";
+                } else {
+                    alert("Profile updated successfully.");
+                    // Optionally reload or update the profile display
+                    location.reload();
+                }
+            })
+            .catch(error => console.error("Error updating profile:", error));
+        }
+        
+      </script>
+     <!-- edit profil -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
         integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
         crossorigin="anonymous"></script>

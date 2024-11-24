@@ -6,13 +6,12 @@ from authlib.integrations.django_client import OAuth
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from urllib.parse import quote_plus, urlencode
 from users.models import UserProfile
-from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth.decorators import login_required
-from .models import Post, PostMedia, Comment
+from .models import Post, PostMedia, Comment, Like, Notification
+from django.utils.timesince import timesince
+from chat.models import Room
 # Create your views here.
 
 oauth = OAuth()
@@ -28,13 +27,16 @@ oauth.register(
 )
 
 
+from django.shortcuts import render, redirect, reverse
+from .models import UserProfile
+
 def index(request):
     user_id = request.session.get("user_id")
     if user_id:
         # Retrieve the user profile data
         user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
         if user_profile:
-            # Retrieve the top 3 latest mentors with the same area of interest as the logged-in user
+            # Retrieve the top 3 latest mentors (same logic as before)
             latest_mentors = UserProfile.objects.filter(
                 role="mentor",
                 area_of_interest=user_profile.area_of_interest
@@ -43,11 +45,15 @@ def index(request):
             # Render the template with user profile and latest mentors
             return render(request, "index.html", {
                 "user_profile": user_profile,
-                "latest_mentors": latest_mentors
+                "latest_mentors": latest_mentors,
             })
-    
-    # Redirect to login if no user is found
-    return redirect(reverse("login"))
+        else:
+            # Handle case where the user_profile doesn't exist
+            return redirect(reverse("login"))
+    else:
+        # Handle case where user_id doesn't exist in the session
+        return redirect(reverse("login"))
+
 
 
 from django.shortcuts import render, redirect
@@ -157,49 +163,51 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from .models import Post, PostMedia, Comment
 
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from django.utils.timesince import timesince
+from .models import Post, Comment
+
 def postDetails(request, postId):
     try:
-        # Fetch the post
         post = get_object_or_404(Post, id=postId)
-        
-        # Prepare media URLs for carousel
+        user = request.user if request.user.is_authenticated else None
+
+        # Prepare media
         media_urls = [media.media.url for media in post.postmedia_set.all()]
-        
+
         # Prepare comments
         comments = [
             {
+                "id": comment.id,
                 "user_name": comment.user.name,
-                "user_username": comment.user.username,
                 "content": comment.content,
-                "created_at": comment.created_at.strftime("%B %d, %Y, %I:%M %p"),
-                "user_profile_pic": comment.user.profile_pic.url if comment.user.profile_pic else None,
+                "created_at": timesince(comment.created_at) + " ago",
+                "can_delete": user == comment.user if user else False,  # Check if the logged-in user is the comment author
             }
             for comment in post.comments.all()
         ]
-        
-        # Prepare user data for the post
-        user = post.user
-        user_data = {
-            "name": user.name,
-            "username": user.username,
-            "bio": user.bio,
-            "profile_pic": user.profile_pic.url if user.profile_pic else None
-        }
-        
-        # Prepare the post data
+
+        # Prepare response data
         response_data = {
-            "title": post.title,
+            "user": {
+                "name": post.user.name,
+                "profile_pic": post.user.profile_pic.url if post.user.profile_pic else None,
+            },
             "content": post.content,
-            "created_at": post.created_at.strftime("%B %d, %Y, %I:%M %p"),
-            "user": user_data,
+            "created_at": timesince(post.created_at) + " ago",
             "media": media_urls,
+            "is_video": post.is_video,
             "comments": comments,
+            "can_delete_post": user == post.user if user else False,  # Check if the logged-in user is the post author
         }
 
         return JsonResponse(response_data)
-    
+
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)
+
+    
 
 def all_posts(request):
     try:
@@ -301,3 +309,181 @@ def add_comment(request, postId):
 
     return JsonResponse({"success": False, "error": "Invalid request method."}, status=405)
 
+# delete comment
+
+from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
+
+def deleteComment(request, commentId):
+    # Check if the user is authenticated using session-based authentication
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return JsonResponse({"error": "You need to be logged in to delete comments."}, status=401)
+
+    try:
+        # Fetch the comment and the user profile
+        comment = get_object_or_404(Comment, id=commentId)
+        user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
+
+        if not user_profile:
+            return JsonResponse({"error": "Invalid user profile."}, status=403)
+        
+        # Check if the user is the owner of the comment or has admin rights
+        if comment.user == user_profile or user_profile.is_superuser:
+            comment.delete()
+            return JsonResponse({"message": "Comment deleted successfully."})
+        else:
+            return JsonResponse({"error": "You are not authorized to delete this comment."}, status=403)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+
+#delete post
+
+def deletePost(request, postId):
+    # Check if the user is authenticated using session-based authentication
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return JsonResponse({"error": "You need to be logged in to delete posts."}, status=401)
+    
+    try:
+        # Fetch the post and the user profile
+        post = get_object_or_404(Post, id=postId)
+        user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
+
+        if not user_profile:
+            return JsonResponse({"error": "Invalid user profile."}, status=403)
+        
+        # Check if the user is the owner of the post or has admin rights
+        if post.user == user_profile or user_profile.is_superuser:
+            post.delete()
+            return JsonResponse({"message": "Post deleted successfully."})
+        else:
+            return JsonResponse({"error": "You are not authorized to delete this post."}, status=403)
+
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=500)
+
+# -------------like----------------
+def toggle_like(request):
+    if request.method == "POST":
+        post_id = request.POST.get("post_id")
+        user_id = request.session.get("user_id")
+
+        if not user_id or not post_id:
+            return JsonResponse({"error": "Invalid request"}, status=400)
+
+        user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
+        post = get_object_or_404(Post, id=post_id)
+
+        # Check if the user has already liked the post
+        like, created = Like.objects.get_or_create(user=user_profile, post=post)
+
+        if not created:  # If already liked, remove the like
+            like.delete()
+            return JsonResponse({"liked": False})
+        return JsonResponse({"liked": True})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+# notifications
+def get_notifications(request):
+    """
+    Retrieve unread notifications for the authenticated user based on session.
+    """
+    user_id = request.session.get("user_id")  # Use your authentication method
+    if user_id:
+        user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
+        if user_profile:
+            # Fetch unread notifications for the authenticated user
+            notifications = Notification.objects.filter(recipient=user_profile, is_read=False).order_by('-created_at')
+
+            # Mark notifications as read
+            notifications.update(is_read=True)
+
+            # Prepare data for response
+            notification_data = [
+                {
+                    "sender_name": n.sender.username if n.sender else "System",
+                    "sender_image": n.sender.profile_pic.url if n.sender else "/media/images/defaults/profile_img.jpg",
+                    "content": n.content,
+                    "time": n.created_at.strftime("%b %d, %H:%M"),
+                }
+                for n in notifications
+            ]
+
+            return JsonResponse({"notifications": notification_data}, safe=False)
+
+    # Redirect to login if user is not authenticated
+    return redirect(reverse("login"))
+
+
+def fetch_rooms(request):
+    user_id = request.session.get("user_id")
+    if user_id:
+        # Retrieve the user profile data
+        user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
+        if user_profile:
+            # Get rooms where the user is part of
+            rooms = Room.objects.filter(users=user_profile)
+            return render(request, "index.html", {"user_profile": user_profile, 'rooms': rooms})
+    
+    # Redirect to login if no user is found
+    return redirect(reverse("login"))
+
+
+from django.shortcuts import render, get_object_or_404
+from django.utils.timesince import timesince
+
+def post(request, postId):
+    # Retrieve the user ID from the session
+    user_id = request.session.get("user_id")
+    user_profile = None
+    user_rooms = []
+    
+    if user_id:
+        # Retrieve the user profile data
+        user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
+        if user_profile:
+            # Retrieve the rooms the user is in
+            user_rooms = user_profile.rooms.all()
+
+    # Get the post or raise a 404 if not found
+    post = get_object_or_404(Post, id=postId)
+
+    # Prepare media
+    media_urls = [media.media.url for media in post.postmedia_set.all()]
+
+    # Prepare comments
+    comments = [
+        {
+            "id": comment.id,
+            "user_name": comment.user.name,
+            "content": comment.content,
+            "created_at": timesince(comment.created_at) + " ago",
+            "can_delete": user_profile == comment.user if user_profile else False,  # Check if the logged-in user is the comment author
+        }
+        for comment in post.comments.all()
+    ]
+
+    # Prepare context data
+    context = {
+        "user_profile": user_profile,  # User profile data from session
+        "user_rooms": user_rooms,  # Rooms the user is in
+        "post": {
+            "user": {
+                "name": post.user.name,
+                "profile_pic": post.user.profile_pic.url if post.user.profile_pic else None,
+            },
+            "content": post.content,
+            "created_at": timesince(post.created_at) + " ago",
+            "media": media_urls,
+            "is_video": post.is_video,
+            "comments": comments,
+            "can_delete_post": user_profile == post.user if user_profile else False,  # Check if the logged-in user is the post author
+        }
+    }
+
+    # Render the template with the prepared context
+    return render(request, "post.html", context)

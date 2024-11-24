@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect
 from django.utils.text import slugify
 from .models import Room, UserProfile
 from django.core.exceptions import ValidationError
+from django.views.decorators.csrf import csrf_exempt
 import logging
 
 # Initialize OAuth for authentication with Auth0
@@ -193,3 +194,28 @@ def create_room(request):
 
 def add_user_to_room():
     pass
+
+
+# View to fetch rooms based on logged-in user
+
+
+
+# View to handle sharing content
+def share_content(request):
+    """Handle sharing content with selected rooms."""
+    if request.method == 'POST':
+        content_type = request.POST.get('content_type')
+        content_id = request.POST.get('content_id')
+        selected_rooms = request.POST.getlist('share_with[]')  # List of selected room slugs
+        
+        # Implement logic for sharing the content with the selected rooms
+        # Example: Save the shared content into the room or send notifications, etc.
+        
+        # Example: Just print the shared content (you can replace this with your logic)
+        print(f"Content type: {content_type}, Content ID: {content_id}")
+        print(f"Sharing with rooms: {selected_rooms}")
+        
+        # Redirect or return a response after processing
+        return redirect('some_view')  # Replace with an actual redirect URL
+
+    return redirect('some_view')  # Redirect if it's not a POST request

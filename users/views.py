@@ -108,8 +108,6 @@ def profile(request, username):
     })
 
 
-#
-
 def additionalinfo(request):
     # Fetch the user ID from the session
     user_id = request.session.get("user_id")
@@ -190,3 +188,45 @@ def search_users(request):
         ]
         return JsonResponse({'users': user_data})
     return JsonResponse({'users': []})
+
+@csrf_exempt
+def updateUserProfile(request):
+    user_id = request.session.get("user_id")
+    if not user_id:
+        return JsonResponse({"error": "You need to be logged in to update your profile."}, status=401)
+
+    if request.method == "POST":
+        user_profile = UserProfile.objects.filter(auth0_id=user_id).first()
+        if not user_profile:
+            return JsonResponse({"error": "User profile not found."}, status=404)
+
+        try:
+            # Update name
+            name = request.POST.get("name")
+            if name:
+                user_profile.name = name
+            
+            # Update area of interest
+            area_of_interest = request.POST.get("area_of_interest")
+            if area_of_interest:
+                user_profile.area_of_interest = area_of_interest
+            
+            # Update profile picture
+            if "profile_pic" in request.FILES:
+                profile_pic = request.FILES["profile_pic"]
+
+                # Delete old profile pic if not default
+                if user_profile.profile_pic and not user_profile.profile_pic.name.startswith("media/images/defaults/"):
+                    default_storage.delete(user_profile.profile_pic.path)
+
+                # Save new profile picture
+                user_profile.profile_pic = profile_pic
+
+            # Save changes
+            user_profile.save()
+            return JsonResponse({"message": "Profile updated successfully."})
+        
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    return JsonResponse({"error": "Invalid request method."}, status=405)

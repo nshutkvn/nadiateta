@@ -41,6 +41,7 @@
                 <i class="fa fa-search" id="mobile-search-icon"></i>
                 <a href="chat"><i class="fa fa-comments" id="dms-icon"></i></a>
                 <a href="coubs"><i class="fa-solid fa-play"></i></a>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#notification_modal"><i class="fa-solid fa-bell"></i></a>        
                 <a href="#" data-bs-toggle="modal" data-bs-target="#create_modal"><i class="fa-solid fa-plus"></i></a>
                 <div class="profile-dropdown">
                     <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-icon">
@@ -60,8 +61,7 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="account">
-                <img src="{% static 'media/images/defaults/Default_pfp.svg.png' %}" alt="Profile Picture"
-                    class="account-dp">
+                <img src="{{ user_profile.profile_pic.url }}" alt="Profile Picture" class="account-dp">
                 <div class="account-info">
                     <span class="account-name">{{ user_profile.name }}</span>
                     <span class="account-username">{{ user_profile.role }}</span>
@@ -75,6 +75,12 @@
                 <!-- <li><a href="explore"><i class="fa fa-compass"></i> Explore</a></li> -->
                 <li><a href="coubs"><i class="fa-solid fa-play"></i> Coubs</a></li>
                 <li><a href="chat"><i class="fa fa-comments" id="dms-icon"></i> Chat</a></li>
+                <li>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#notification_modal">
+                        <i class="fa-solid fa-bell"></i> Notifications
+                    </a>
+                </li>
+                
                 <!-- <li><a href="#"><i class="fa fa-bookmark"></i> Saved</a></li> -->
                 <!-- <li><a href="#"><i class="fa fa-chart-line"></i> Insights</a></li> -->
                 <!-- <li><a href="#"><i class="fa fa-archive"></i> Archive</a></li> -->
@@ -211,6 +217,20 @@
             {% else %}
             <p>No mentors in you area yet</p>
             {% endif %}
+            {% for room in user_rooms %}
+            <a href="{% url 'room' room.slug %}">
+                <div class="cart">
+                    <div>
+                        <div class="img">
+                            <img src="{{ room.profile_pic.url }} " alt="Room">
+                        </div>
+                        <div class="info">
+                            <p class="name">{{ room.name }}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
         </aside>
     </div>
 
@@ -280,6 +300,73 @@
         </div>
     </div>
 
+    <!-- Notifications --> 
+    <div class="modal fade" id="notification_modal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="notifications">
+                        <!-- Notifications will be dynamically loaded here -->
+                        <p>Loading notifications...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- share -->
+    <!-- share -->
+<div class="modal fade" id="send_message_modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Share</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="shareForm" method="POST" action="{% url 'share_content' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="content_type" id="content_type" value="">
+                    <input type="hidden" name="content_id" id="content_id" value="">
+
+                    <div class="send">
+                        <p>Suggested</p>
+                        {% for room in rooms %}
+                        <a href="{% url 'room' room.slug %}">
+                            <div class="cart">
+                                <div>
+                                    <div class="img">
+                                        <img src="{{ room.profile_pic.url }} " alt="Room">
+                                    </div>
+                                    <div class="info">
+                                        <p class="name">{{ room.name }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitShareForm()">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+    <!-- **************************************------------------******************************************
+    ******************************************| SCRIPTS START HERE |***************************************
+    *******************************************--------------------******************************************-->
     <!-- search results -->
     <script>
         const searchInput = document.getElementById('search');
@@ -362,7 +449,7 @@
                                 <img src="${post.user.profile_pic || '/static/media/images/defaults/Default_pfp.svg.png'}" alt="Profile Picture">
                                 <div class="post-user-info">
                                     <span class="post-username">${post.user.name}</span>
-                                    <span class="post-location">${post.user.bio || 'Location unavailable'}</span>
+                                    <span class="post-location">${post.content}</span>
                                 </div>
                             </div>
                         `;
@@ -408,28 +495,18 @@
                                 <div class="actions">
                                     <div class="icons">
                                         <div class="icon_left d-flex">
-                                            <div class="like">
+                                            <div class="like" data-post-id="${post.id}">
                                                 <img class="not_loved" src="/static/media/images/defaults/love.png">
                                                 <img class="loved" src="/static/media/images/defaults/heart.png">
                                             </div>
-                                            <div class="chat">
-                                                <button type="button" class="btn p-0">
-                                                    <img src="/static/media/images/defaults/bubble-chat.png">
+                                            <div class="link" data-post-id="${post.id}"> 
+                                                <button type="button" class="btn p-0" onclick="copyLink()">
+                                                    <i class="fa-solid fa-link"></i>
                                                 </button>
-                                            </div>
-                                            <div class="send">
-                                                <button type="button" class="btn p-0">
-                                                    <img src="/static/media/images/defaults/send.png">
-                                                </button>
-                                            </div>
-                                            <div class="save not_saved">
-                                                <img class="hide saved" src="/static/media/images/defaults/save_black.png">
-                                                <img class="not_saved" src="/static/media/images/defaults/save-instagram.png">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <p><b>Liked by</b> <span class="likes">200 others</span></p>
                                 <div id="comments-container-${post.id}"><p><b>${post.user.name}:</b> ${post.content}</p></div>
                                 <span class="post-date">${post.created_at}</span>
                             </div>
@@ -521,63 +598,212 @@
         });
 
     </script>
-
-    <!-- change theme -->
-    <script>
-        // Function to apply a theme (you can reuse this for different themes)
-        function applyTheme(themeName) {
-            const header = document.querySelector('header');
-            const sidebar = document.querySelector('.sidebar');
-            const suggestions = document.querySelector('.suggestions');
-            const posts = document.querySelectorAll('.post');
-            const input = document.querySelector('input');
-            const body = document.body;
-
-            // Clear any existing theme classes (Important!)
-            header.classList.remove('glassmorphic-purple', 'glassmorphic-dark', 'glassmorphic-default'); // Add other theme names
-            sidebar.classList.remove('glassmorphic-purple', 'glassmorphic-dark', 'glassmorphic-default');
-            posts.forEach(post => post.classList.remove('glassmorphic-purple', 'glassmorphic-dark', 'glassmorphic-default'));
-
-            if (themeName === 'purple-theme') {
-                header.classList.add('glassmorphic-purple');
-                sidebar.classList.add('glassmorphic-purple');
-                suggestions.classList.add('glassmorphic-purple');
-                posts.forEach(post => post.classList.add('glassmorphic-purple'));
-                body.style.backgroundColor = 'rgba(138, 45, 157, 0.6)';
-            } else if (themeName === 'dark-theme') {
-                // ... (apply dark theme styles)
-            } else { // Default theme
-                // ... apply default theme styles ...
-            }
-        }
-
-
-
-        // On page load, check for stored theme and apply it:
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('selected-theme');
-            if (savedTheme) {
-                applyTheme(savedTheme);
-            } else {
-                // Apply a default theme if nothing is saved
-                applyTheme('default-theme'); // Or whatever your default is
-            }
-        });
-
-        // Event listeners for the theme dots
-        const themeDots = document.querySelectorAll('.theme-dots .dot');
-        themeDots.forEach(dot => {
-            dot.addEventListener('click', () => {
-                const selectedTheme = dot.dataset.theme;
-                localStorage.setItem('selected-theme', selectedTheme); // Store the theme
-                applyTheme(selectedTheme); // Apply it visually
-            });
-        });
-    </script>
-    <!-- change theme -->
     <!-- add comment -->
 
+    <!-- like javascript -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const likeButtons = document.querySelectorAll(".like");
 
+            likeButtons.forEach((likeButton) => {
+                likeButton.addEventListener("click", function () {
+                    const postId = this.dataset.postId; // Ensure each like button has a data-post-id attribute
+                    const notLovedImage = this.querySelector(".not_loved");
+                    const lovedImage = this.querySelector(".loved");
+
+                    fetch("/toggle-like/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCSRFToken(), // Add a function to retrieve the CSRF token
+                        },
+                        body: JSON.stringify({ post_id: postId }),
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            if (data.liked) {
+                                notLovedImage.style.display = "none";
+                                lovedImage.style.display = "inline";
+                            } else {
+                                notLovedImage.style.display = "inline";
+                                lovedImage.style.display = "none";
+                            }
+                        })
+                        .catch((error) => console.error("Error:", error));
+                });
+            });
+        });
+
+        // Helper function to get CSRF token
+        function getCSRFToken() {
+            const csrfToken = document.querySelector("[name=csrfmiddlewaretoken]");
+            return csrfToken ? csrfToken.value : "";
+        }
+
+    </script>
+    <!-- like javascript -->
+
+    <!-- notification js -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const notificationModal = document.getElementById("notification_modal");
+            const notificationsContainer = notificationModal.querySelector(".notifications");
+        
+            // Event listener for when the modal is about to be shown
+            notificationModal.addEventListener("show.bs.modal", async () => {
+                // Fetch notifications
+                try {
+                    const response = await fetch("/notifications/"); // Adjust URL if needed
+                    if (!response.ok) throw new Error("Failed to fetch notifications.");
+        
+                    const data = await response.json();
+        
+                    // Clear existing content
+                    notificationsContainer.innerHTML = "";
+        
+                    // Populate with notifications
+                    if (data.notifications && data.notifications.length > 0) {
+                        data.notifications.forEach((notif) => {
+                            const notifHTML = `
+                                <div class="notif">
+                                    <div class="cart">
+                                        <div>
+                                            <div class="img">
+                                                <img src="${notif.sender_image}" alt="${notif.sender_name}">
+                                            </div>
+                                            <div class="info">
+                                                <p class="name">
+                                                    ${notif.sender_name}
+                                                    <span class="desc">${notif.content}</span>
+                                                    <span class="time">${notif.time}</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            notificationsContainer.insertAdjacentHTML("beforeend", notifHTML);
+                        });
+                    } else {
+                        notificationsContainer.innerHTML = `<p>No new notifications.</p>`;
+                    }
+                } catch (error) {
+                    console.error("Error fetching notifications:", error);
+                    notificationsContainer.innerHTML = `<p>Error loading notifications.</p>`;
+                }
+            });
+        });
+        
+    </script>
+    <!-- notification js -->
+
+
+
+    <!-- share -->
+    <script>
+        // Function to fetch rooms and populate the modal
+        document.addEventListener("DOMContentLoaded", function() {
+            const shareModal = document.getElementById('send_message_modal');
+            
+            shareModal.addEventListener('show.bs.modal', function () {
+                fetchRooms();
+            });
+        
+            // Fetch rooms from the server
+            function fetchRooms() {
+                fetch("{% url 'fetch_rooms' %}") // The URL for the rooms data
+            }
+        
+            // Submit the share form
+            document.querySelector('.btn-primary').addEventListener('click', function() {
+                submitShareForm();
+            });
+        
+            // Handle the form submission
+            function submitShareForm() {
+                const form = document.getElementById('shareForm');
+                
+                fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form), // Send the form data
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Content shared successfully!");
+                        // You can close the modal here or clear the form, etc.
+                        $('#send_message_modal').modal('hide'); // Bootstrap modal close (can use vanilla JS as well if needed)
+                    } else {
+                        alert("Error sharing content.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error submitting the form:', error);
+                });
+            }
+        });
+        </script>
+        
+    <!-- share -->
+    
+
+    <script>
+        window.addEventListener('load', function () {
+          fetch('/fetch-rooms/', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value // Get the CSRF token
+            }
+          })
+          .then(response => {
+            // You can check the response here, but since you don't expect any response,
+            // we don't need to do anything further.
+            if (response.ok) {
+              console.log('Rooms fetched successfully');
+            } else {
+              console.error('Error fetching rooms');
+            }
+          })
+          .catch(error => {
+            console.error('Error during fetch:', error);
+          });
+        });
+      </script>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <script>
+        function copyLink(){
+            const postId = event.target.closest('.link').dataset.postId;
+            const domain = window.location.hostname;
+            const link = `http://${domain}/post/${postId}`;
+        
+            navigator.clipboard.writeText(link)
+              .then(() => {
+                alert('Link copied to clipboard!');
+              })
+              .catch(err => {
+                console.error('Error copying link:', err);
+                alert('Failed to copy link. Please try again.');
+              });
+          }
+        </script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
         integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
         crossorigin="anonymous"></script>
