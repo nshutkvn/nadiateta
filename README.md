@@ -42,8 +42,13 @@ source venv/bin/activate   # On Windows: venv\Scripts\activate
 ```sh
 pip install -r requirements.txt
 ```
+4. Make Migration
 
-4. Set Up the Database:
+```sh
+python manage.py makemigrations
+```
+
+6. Set Up the Database:
 
 Configure the database settings in settings.py.
 Run migrations:
@@ -52,13 +57,13 @@ Run migrations:
 python manage.py migrate
 ```
 
-5. Run the Development Server:
+6. Run the Development Server:
 
 ```
 python manage.py runserver
 ```
 
-6. Access the Application:
+7. Access the Application:
 Open your browser and navigate to http://localhost:8000.
 
 ## Folder Structure
