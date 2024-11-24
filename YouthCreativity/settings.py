@@ -29,7 +29,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR, "YouthCreativity", "templates")
 SECRET_KEY = 'django-insecure-nvs7qix&4czudn8bj8q)0ct#9kd5b6woch3ndw77dz$d#=gxey'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
